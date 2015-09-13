@@ -27,6 +27,15 @@ namespace DbBasicApp.Models
         [Remote("IsCardIDAvailable", "Validation")]
         public string CardID { get; set; }
 
+        [Required, Column("last_usage")]
+        public int LastUsage { get; set; }
+
+        [Required, Column("current_usage")]
+        public int CurrentUsage { get; set; }
+
+        [Required, Column("balance")]
+        public int Balance { get; set; }
+
         [Column("pkg_id")]
         public int PackageID { get; set; }
 
