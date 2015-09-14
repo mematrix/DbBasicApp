@@ -42,10 +42,10 @@ namespace DbBasicApp.Models
         [ForeignKey("PackageID")]
         public virtual TelecomPackage TelPackage { get; set; }
 
-        public virtual UserLoginInfo UserLoginInfo { get; set; }
+        // public virtual UserLoginInfo UserLoginInfo { get; set; }
 
-        public virtual CashierLoginInfo CashierLoginInfo { get; set; }
+        // public virtual CashierLoginInfo CashierLoginInfo { get; set; }
 
-        public virtual SupporterLoginInfo SupporterLoginInfo { get; set; }
+        // public virtual SupporterLoginInfo SupporterLoginInfo { get; set; }
     }
 }
