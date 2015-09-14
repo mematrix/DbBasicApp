@@ -1,4 +1,7 @@
 using Microsoft.Data.Entity;
+using Microsoft.Dnx.Runtime;
+using Microsoft.Dnx.Runtime.Infrastructure;
+using Microsoft.Framework.DependencyInjection;
 
 namespace DbBasicApp.Models
 {
@@ -38,5 +41,11 @@ namespace DbBasicApp.Models
         /// 评价信息表
         /// </summary>
         public DbSet<RatingRecord> RatingRecords { get; set; }
+        
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            var appEvn = CallContextServiceLocator.Locator.ServiceProvider.GetRequiredService<IApplicationEnvironment>();
+            optionsBuilder.UseSqlite($"Data Source = { appEvn.ApplicationBasePath }/app.db");
+        }
     }
 }
