@@ -27,7 +27,7 @@ namespace DbBasicApp.Models
     [Table("user_login_info")]
     public class UserLoginInfo : LoginInfo
     {
-        public virtual PaymentRecord PaymentRecord { get; set; }
+        // public virtual PaymentRecord PaymentRecord { get; set; }
 
         public virtual List<RatingRecord> RatingRecord { get; set; }
     }
