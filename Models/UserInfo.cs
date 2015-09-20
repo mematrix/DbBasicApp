@@ -37,9 +37,10 @@ namespace DbBasicApp.Models
         public int Balance { get; set; }
 
         [Column("pkg_id")]
-        public int PackageID { get; set; }
+        public int? PackageID { get; set; }
 
-        [ForeignKey("PackageID")]
+        // 外键使用Fluent API配置
+        // [ForeignKey("PackageID")]
         public virtual TelecomPackage TelPackage { get; set; }
 
         // public virtual UserLoginInfo UserLoginInfo { get; set; }

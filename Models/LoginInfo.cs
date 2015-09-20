@@ -18,8 +18,9 @@ namespace DbBasicApp.Models
 
         [Required, Column("user_id")]
         public int UserId { get; set; }
-
-        [Required, ForeignKey("UserId")]
+        
+        // 外键使用Fluent API配置
+        // [Required, ForeignKey("UserId")]
         public virtual UserInfo UserInfo { get; set; }
     }
 
@@ -29,7 +30,7 @@ namespace DbBasicApp.Models
     {
         // public virtual PaymentRecord PaymentRecord { get; set; }
 
-        public virtual List<RatingRecord> RatingRecord { get; set; }
+        public virtual List<RatingRecord> RatingRecords { get; set; }
     }
 
     // 收款员登录信息表

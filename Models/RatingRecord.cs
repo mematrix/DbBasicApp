@@ -19,13 +19,15 @@ namespace DbBasicApp.Models
         [Required, Column("user_name")]
         public string UserName { get; set; }
 
-        [Required, ForeignKey("UserName")]
+        // 外键使用Fluent API配置
+        // [Required, ForeignKey("UserName")]
         public virtual UserLoginInfo UserLoginInfo { get; set; }
 
         [Required, Column("supporter_name")]
         public string SupporterName { get; set; }
 
-        [Required, ForeignKey("SupporterName")]
+        // 外键使用Fluent API配置
+        // [Required, ForeignKey("SupporterName")]
         public SupporterLoginInfo SupporterInfo { get; set; }
     }
 }

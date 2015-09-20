@@ -22,13 +22,15 @@ namespace DbBasicApp.Models
         [Required, Column("user_name")]
         public string UserName{get;set;}
         
-        [Required, ForeignKey("UserName")]
+        // 外键使用Fluent API配置
+        // [Required, ForeignKey("UserName")]
         public virtual UserLoginInfo UserLoginInfo{get;set;}
         
         [Column("cashier_name")]
         public string CashierName{get;set;}
         
-        [ForeignKey("CashierName")]
+        // 外键使用Fluent API配置
+        // [ForeignKey("CashierName")]
         public virtual CashierLoginInfo CashierInfo{get;set;}
     }
 }
