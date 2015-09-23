@@ -26,6 +26,11 @@ namespace DbBasicApp.Controllers
 
             return View();
         }
+        
+        public IActionResult Support()
+        {
+            return View();
+        }
 
         public IActionResult Error()
         {
