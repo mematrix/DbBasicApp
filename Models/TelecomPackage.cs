@@ -13,19 +13,24 @@ namespace DbBasicApp.Models
         public int ID { get; set; }
 
         [Required(ErrorMessage = "套餐名称不可为空！"), Column("name")]
+        [StringLength(50)]
         [RegularExpression(@"^(?!\s).*\S+$", ErrorMessage = "请输入正确的名称，首尾不要包含空白符。")]
+        [Display(Name = "套餐名称")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "必须指定套餐价格！"), Column("price")]
         [MinNumber(MinValue = 0, ErrorMessage = "请输入正确的定价！")]
+        [Display(Name = "套餐定价")]
         public int Price { get; set; }
 
         [Required(ErrorMessage = "必须指定套餐内包含用量！"), Column("base_usage")]
         [MinNumber(ErrorMessage = "请输入正确的数值！")]
+        [Display(Name = "套餐内可用量")]
         public int BaseUsage { get; set; }
 
         [Required(ErrorMessage = "必须指定超出套餐外的单价！"), Column("out_price")]
         [MinNumber(ErrorMessage = "请输入正确的数值！")]
+        [Display(Name = "超出套餐用量后单价：")]
         public int OutPrice { get; set; }
 
         public virtual List<UserInfo> UserInfos { get; set; }
