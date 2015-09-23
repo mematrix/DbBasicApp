@@ -18,10 +18,11 @@ namespace DbBasicApp.Models
         public DbSet<UserInfo> UserInfos { get; set; }
 
         /// <summary>
-        /// 普通用户登录信息
+        /// 用户登录信息表
         /// </summary>
-        public DbSet<UserLoginInfo> UserLoginInfos { get; set; }
+        public DbSet<LoginInfo> LoginInfos { get; set; }
 
+        /*
         /// <summary>
         /// 收款员登录信息
         /// </summary>
@@ -31,6 +32,7 @@ namespace DbBasicApp.Models
         /// 客服人员登录信息
         /// </summary>
         public DbSet<SupporterLoginInfo> SupporterLoginInfo { get; set; }
+        */
 
         /// <summary>
         /// 缴费收费纪录表
@@ -42,6 +44,11 @@ namespace DbBasicApp.Models
         /// </summary>
         public DbSet<RatingRecord> RatingRecords { get; set; }
 
+        /// <summary>
+        /// 服务消息表
+        /// </summary>
+        public DbSet<MsgRecord> MsgRecords { get; set; }
+
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             base.OnConfiguring(optionsBuilder);
@@ -52,37 +59,50 @@ namespace DbBasicApp.Models
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
             modelBuilder.Entity<UserInfo>().Reference(u => u.TelPackage)
-                .InverseCollection(t => t.UserInfos)
+                .InverseCollection()
                 .ForeignKey(u => u.PackageID)
                 .Required(false);
-            modelBuilder.Entity<UserLoginInfo>().Reference(u => u.UserInfo)
+
+            modelBuilder.Entity<LoginInfo>().Reference(l => l.UserInfo)
                 .InverseReference()
-                .ForeignKey((UserLoginInfo u) => u.UserId)
+                .ForeignKey((LoginInfo l) => l.UserId)
                 .Required(true);
-            modelBuilder.Entity<CashierLoginInfo>().Reference(u => u.UserInfo)
+            /* modelBuilder.Entity<CashierLoginInfo>().Reference(u => u.UserInfo)
                 .InverseReference()
                 .ForeignKey((CashierLoginInfo u) => u.UserId)
                 .Required(true);
             modelBuilder.Entity<SupporterLoginInfo>().Reference(u => u.UserInfo)
                 .InverseReference()
                 .ForeignKey((SupporterLoginInfo u) => u.UserId)
-                .Required(true);
+                .Required(true); */
+
             modelBuilder.Entity<PaymentRecord>().Reference(p => p.UserLoginInfo)
-                .InverseReference()
-                .ForeignKey((PaymentRecord p) => p.UserName)
+                .InverseCollection()
+                .ForeignKey(p => p.UserName)
                 .Required(true);
             modelBuilder.Entity<PaymentRecord>().Reference(p => p.CashierInfo)
-                .InverseCollection(c => c.PaymentRecords)
+                .InverseCollection()
                 .ForeignKey(p => p.CashierName)
                 .Required(false);
+
             modelBuilder.Entity<RatingRecord>().Reference(r => r.UserLoginInfo)
-                .InverseCollection(u => u.RatingRecords)
+                .InverseCollection()
                 .ForeignKey(r => r.UserName)
                 .Required(true);
             modelBuilder.Entity<RatingRecord>().Reference(r => r.SupporterInfo)
-                .InverseCollection(s => s.RatingRecords)
+                .InverseCollection()
                 .ForeignKey(r => r.SupporterName)
+                .Required(true);
+
+            modelBuilder.Entity<MsgRecord>().Reference(m => m.SenderLoginInfo)
+                .InverseCollection()
+                .ForeignKey(m => m.SenderName)
+                .Required(true);
+            modelBuilder.Entity<MsgRecord>().Reference(m => m.RecvLoginInfo)
+                .InverseCollection()
+                .ForeignKey(m => m.ReceiverName)
                 .Required(true);
 
             modelBuilder.Entity<UserInfo>().AlternateKey(u => u.CardID);
