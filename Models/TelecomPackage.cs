@@ -33,6 +33,6 @@ namespace DbBasicApp.Models
         [Display(Name = "超出套餐用量后单价：")]
         public int OutPrice { get; set; }
 
-        public virtual List<UserInfo> UserInfos { get; set; }
+        // public virtual List<UserInfo> UserInfos { get; set; }
     }
 }
