@@ -1,3 +1,4 @@
+using DbBasicApp.Filters;
 using DbBasicApp.ViewModels;
 using Microsoft.AspNet.Mvc;
 
@@ -31,6 +32,7 @@ namespace DbBasicApp.Controllers
             return View();
         }
         
+        [CustomAuth]
         public IActionResult Search()
         {
             return View();
