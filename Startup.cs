@@ -27,6 +27,10 @@ namespace DbBasicApp
         // This method gets called by the runtime.
         public void ConfigureServices(IServiceCollection services)
         {
+            // 添加Session
+            services.AddCaching();
+            services.AddSession();
+            
             // Add MVC services to the services container.
             services.AddMvc();
 
@@ -58,6 +62,9 @@ namespace DbBasicApp
 
             // Add static files to the request pipeline.
             app.UseStaticFiles();
+            
+            // 启用Session
+            app.UseSession();
 
             // Add MVC to the request pipeline.
             app.UseMvc(routes =>
