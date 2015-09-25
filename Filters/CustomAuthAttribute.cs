@@ -1,7 +1,9 @@
+using System;
 using Microsoft.AspNet.Mvc;
 
 namespace DbBasicApp.Filters
 {
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, AllowMultiple = false)]
     public class CustomAuthAttribute : ActionFilterAttribute
     {
         public string ControllerName { get; set; }
