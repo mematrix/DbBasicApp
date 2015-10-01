@@ -211,3 +211,6 @@ FakesAssemblies/
 
 # VS Code settings file
 .vscode/
+
+# lib cache (provided by cdn)
+wwwroot/lib/
