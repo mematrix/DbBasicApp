@@ -1,7 +1,53 @@
 @{
-    ViewData["Title"] = "About";
+    ViewData["Title"] = "关于应用";
 }
-<h2>@ViewData["Title"].</h2>
-<h3>@ViewData["Message"]</h3>
+<h2>@(ViewData["Title"])</h2>
 
-<p>Use this area to provide additional information.</p>
+<div class="row">
+    <div class="col-md-8">
+        <div class="form-horizontal">
+            <h4>Designed for 数据库课程设计，不做它用。</h4>
+            <hr />
+            <div class="form-group" style="margin-left: 0px;">
+                <span class="col-md-1 label label-success">院系：</span>
+                <span class="col-md-11">计算机科学与技术学院</span>
+            </div>
+            <div class="form-group" style="margin-left: 0px;">
+                <span class="col-md-1 label label-success">班级：</span>
+                <span class="col-md-11">CS1204</span>
+            </div>
+            <div class="form-group" style="margin-left: 0px;">
+                <span class="col-md-1 label label-primary">学号：</span>
+                <span class="col-md-11">U201214895</span>
+            </div>
+            <div class="form-group" style="margin-left: 0px;">
+                <span class="col-md-1 label label-primary">姓名：</span>
+                <span class="col-md-11">何鹏</span>
+            </div>
+            <div class="form-group" style="margin-left: 0px;">
+                <span class="col-md-1 label label-info">同组人：</span>
+                <span class="col-md-11">蔡沁韦</span>
+            </div>
+            <div class="form-group" style="margin-left: 0px;">
+                <span class="col-md-1 label label-info">学号：</span>
+                <span class="col-md-11">U201214897</span>
+            </div>
+            <hr />
+            <div class="form-group" style="margin-left: 0px;">
+                <span class="col-md-1 label label-default">GitHub：</span>
+                <span class="col-md-11">
+                    <a href="https://github.com/3meng/DbBasicApp" target="_black">https://github.com/3meng/DbBasicApp</a>
+                </span>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <h4>概述</h4>
+        <hr />
+        <p>
+            本次数据库课程设计选题为“电信缴费系统”，使用ASP.NET MVC 6 Preview设计完成，包括界面、数据库、管理系统等。
+            而作为一个简单实现，由于用户权限设置问题，目前只能由<a href="/">此页面</a>在已注册用户中指定收款员，这个页面
+            只是作为调试使用，而对应实际生活，应当有相应的系统。
+        </p>
+    </div>
+</div>
