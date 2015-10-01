@@ -1,0 +1,13 @@
+@ {
+    ViewData["Title"] = ViewData["Status"] ?? ":(";
+}
+
+<div class="row">
+    <div class="col-md-2">
+        <div style="font-size: 800%">:(</div>
+    </div>
+    <div class="col-md-10">
+        <h1>Oops.</h1>
+        <h2>抱歉，服务器无法处理您的请求。（Status Code：@ViewData["Status"]）</h2>
+    </div>
+</div>
