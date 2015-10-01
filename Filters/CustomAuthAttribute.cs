@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 
 namespace DbBasicApp.Filters
@@ -12,10 +14,11 @@ namespace DbBasicApp.Filters
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
-            var user = context.HttpContext.User;
-            if (user == null || !user.Identity.IsAuthenticated)
+            var userName = context.HttpContext.Session.GetString("signin-user");
+            if (string.IsNullOrEmpty(userName))
             {
-                context.Result = new RedirectToActionResult(ActionName ?? "Login", ControllerName ?? "Account", null);
+                context.Result = new RedirectToActionResult(ActionName ?? "Login", ControllerName ?? "Account",
+                    new Dictionary<string, object> { { "ReturnUrl", context.HttpContext.Request.Path.ToUriComponent() } });
             }
         }
     }
