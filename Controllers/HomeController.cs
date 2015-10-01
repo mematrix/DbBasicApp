@@ -2,15 +2,17 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DbBasicApp.Filters;
 using Microsoft.AspNet.Mvc;
 
 namespace DbBasicApp.Controllers
 {
     public class HomeController : Controller
     {
+        [CustomAuth]
         public IActionResult Index()
         {
-            return RedirectToAction("Login", "Account");
+            return View();
         }
 
         public IActionResult About()
@@ -32,9 +34,16 @@ namespace DbBasicApp.Controllers
             return View();
         }
 
+        [NonAction]
         public IActionResult Error()
         {
             return View("~/Views/Shared/Error.cshtml");
+        }
+        
+        public IActionResult Status(int id)
+        {
+            ViewData["Status"] = id;
+            return View("~/View/Shared/Status.cshtml");
         }
     }
 }
