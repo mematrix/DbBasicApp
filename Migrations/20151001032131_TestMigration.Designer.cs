@@ -8,11 +8,11 @@ using DbBasicApp.Models;
 namespace DbBasicApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class UpdateMigration
+    partial class TestMigration
     {
         public override string Id
         {
-            get { return "20150923091923_UpdateMigration"; }
+            get { return "20151001032131_TestMigration"; }
         }
 
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -22,8 +22,8 @@ namespace DbBasicApp.Migrations
 
             modelBuilder.Entity("DbBasicApp.Models.LoginInfo", b =>
                 {
-                    b.Property<string>("Name")
-                        .Annotation("Relational:ColumnName", "name");
+                    b.Property<string>("UserName")
+                        .Annotation("Relational:ColumnName", "user_name");
 
                     b.Property<int>("Level")
                         .Annotation("Relational:ColumnName", "level");
@@ -35,7 +35,7 @@ namespace DbBasicApp.Migrations
                     b.Property<int>("UserId")
                         .Annotation("Relational:ColumnName", "user_id");
 
-                    b.Key("Name");
+                    b.Key("UserName");
 
                     b.Annotation("Relational:TableName", "login_info");
                 });

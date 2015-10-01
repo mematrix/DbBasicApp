@@ -4,7 +4,7 @@ using Microsoft.Data.Entity.Migrations;
 
 namespace DbBasicApp.Migrations
 {
-    public partial class UpdateMigration : Migration
+    public partial class TestMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -53,14 +53,14 @@ namespace DbBasicApp.Migrations
                 name: "login_info",
                 columns: table => new
                 {
-                    name = table.Column<string>(isNullable: false),
+                    user_name = table.Column<string>(isNullable: false),
                     level = table.Column<int>(isNullable: false),
                     password = table.Column<string>(isNullable: false),
                     user_id = table.Column<int>(isNullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_LoginInfo", x => x.name);
+                    table.PrimaryKey("PK_LoginInfo", x => x.user_name);
                     table.ForeignKey(
                         name: "FK_LoginInfo_UserInfo_UserId",
                         column: x => x.user_id,
@@ -85,12 +85,12 @@ namespace DbBasicApp.Migrations
                         name: "FK_MsgRecord_LoginInfo_ReceiverName",
                         column: x => x.recv_name,
                         principalTable: "login_info",
-                        principalColumn: "name");
+                        principalColumn: "user_name");
                     table.ForeignKey(
                         name: "FK_MsgRecord_LoginInfo_SenderName",
                         column: x => x.sender_name,
                         principalTable: "login_info",
-                        principalColumn: "name");
+                        principalColumn: "user_name");
                 });
             migrationBuilder.CreateTable(
                 name: "payment_record",
@@ -111,12 +111,12 @@ namespace DbBasicApp.Migrations
                         name: "FK_PaymentRecord_LoginInfo_CashierName",
                         column: x => x.cashier_name,
                         principalTable: "login_info",
-                        principalColumn: "name");
+                        principalColumn: "user_name");
                     table.ForeignKey(
                         name: "FK_PaymentRecord_LoginInfo_UserName",
                         column: x => x.user_name,
                         principalTable: "login_info",
-                        principalColumn: "name");
+                        principalColumn: "user_name");
                 });
             migrationBuilder.CreateTable(
                 name: "rating_record",
@@ -137,12 +137,12 @@ namespace DbBasicApp.Migrations
                         name: "FK_RatingRecord_LoginInfo_SupporterName",
                         column: x => x.supporter_name,
                         principalTable: "login_info",
-                        principalColumn: "name");
+                        principalColumn: "user_name");
                     table.ForeignKey(
                         name: "FK_RatingRecord_LoginInfo_UserName",
                         column: x => x.user_name,
                         principalTable: "login_info",
-                        principalColumn: "name");
+                        principalColumn: "user_name");
                 });
         }
 

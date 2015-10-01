@@ -17,8 +17,8 @@ namespace DbBasicApp.Migrations
 
             modelBuilder.Entity("DbBasicApp.Models.LoginInfo", b =>
                 {
-                    b.Property<string>("Name")
-                        .Annotation("Relational:ColumnName", "name");
+                    b.Property<string>("UserName")
+                        .Annotation("Relational:ColumnName", "user_name");
 
                     b.Property<int>("Level")
                         .Annotation("Relational:ColumnName", "level");
@@ -30,7 +30,7 @@ namespace DbBasicApp.Migrations
                     b.Property<int>("UserId")
                         .Annotation("Relational:ColumnName", "user_id");
 
-                    b.Key("Name");
+                    b.Key("UserName");
 
                     b.Annotation("Relational:TableName", "login_info");
                 });
