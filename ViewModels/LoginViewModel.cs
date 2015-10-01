@@ -12,5 +12,8 @@ namespace DbBasicApp.ViewModels
         [DataType(DataType.Password)]
         [Display(Name = "登录密码")]
         public string Password { get; set; }
+        
+        [Display(Name = "记住我")]
+        public bool RememberMe{get;set;}
     }
 }
