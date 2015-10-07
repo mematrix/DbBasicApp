@@ -1,0 +1,24 @@
+@using DbBasicApp.Services
+@inject AccountService<LoginInfo> Service
+
+@{
+    var user = await Service.GetCurrentUserAsync();
+    if (user == null)
+    {
+        <ul class="nav navbar-nav navbar-right">
+            <li><a asp-controller="Account" asp-action="Register">注册</a></li>
+            <li><a asp-controller="Account" asp-action="Login">登录</a></li>
+        </ul>
+    }
+    else
+    {
+        <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a asp-controller="Home" asp-action="Index" title="Info">欢迎 @user.UserName!</a>
+                </li>
+                <li><a href="javascript:document.getElementById('logoutForm').submit()">退出登录</a></li>
+            </ul>
+        </form>
+    }
+}
