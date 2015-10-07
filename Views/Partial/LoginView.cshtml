@@ -1,0 +1,27 @@
+@model LoginInfo
+
+@{
+    switch (Model?.Level)
+    {
+        case 1: ViewData["Level"] = "客服人员"; break;
+        case 2: ViewData["Level"] = "收款员"; break;
+        default: ViewData["Level"] = "普通用户"; break;
+    }
+}
+
+<div class="list-group">
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">登录名</h4>
+        <p class="list-group-item-text">@Model.UserName</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">登录密码</h4>
+        <p class="list-group-item-text">
+            <a asp-controller="Account" asp-action="ChangePassword">修改</a>
+        </p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">身份</h4>
+        <p class="list-group-item-text">@ViewData["Level"]</p>
+    </div>
+</div>
