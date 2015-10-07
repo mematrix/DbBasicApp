@@ -6,7 +6,7 @@ using Microsoft.AspNet.Http;
 
 namespace DbBasicApp.Services
 {
-    public class AccountService<T> where T : ISignInInfo
+    public class AccountService<T> where T : class, ISignInInfo
     {
         private AppDbContext _dbContext;
         private HttpContext _httpContext;
@@ -26,7 +26,7 @@ namespace DbBasicApp.Services
         /// <returns>登录结果</returns>
         public async Task<SignInResult> SignInAsync(string userName, string password, bool isPersistent)
         {
-            var user = await Task.Run(() => _dbContext.LoginInfos.FirstOrDefault(l => l.UserName == userName));
+            var user = await FindUserByNameAsync(userName);
             if (user == null)
             {
                 return new SignInResult { IsSucceeded = false, ErrorMsg = "用户不存在" };
@@ -48,9 +48,46 @@ namespace DbBasicApp.Services
             return new SignInResult { IsSucceeded = true };
         }
 
-        public async Task SignInAsync(T user, bool isPersistent = false)
+        public async Task<SignInResult> SignInAsync(T user, bool isPersistent = false)
         {
-            await SignInAsync(user.UserName, user.Password, isPersistent);
+            return await SignInAsync(user.UserName, user.Password, isPersistent);
+        }
+
+        public async Task<AccountResult> RegisterAsync(T user)
+        {
+            try
+            {
+                _dbContext.Add(user);
+                await _dbContext.SaveChangesAsync();
+                return new AccountResult { IsSucceeded = true };
+            }
+            catch (System.Exception e)
+            {
+                return new AccountResult { IsSucceeded = false, ErrorMsg = e.Message };
+            }
+        }
+        
+        /// <summary>
+        /// 退出登录
+        /// </summary>
+        public async Task SignOutAsync()
+        {
+            await Task.Run(()=>_httpContext.Session.Remove("signin-user"));
+        }
+
+        public async Task<ISignInInfo> FindUserByNameAsync(string userName)
+        {
+            return await Task.Run(() => _dbContext.LoginInfos.FirstOrDefault(l => l.UserName == userName));
+        }
+        
+        /// <summary>
+        /// 获取当前登录用户
+        /// </summary>
+        public async Task<T> GetCurrentUserAsync()
+        {
+            var userName=_httpContext.Session.GetString("signin-user");
+            var user = await FindUserByNameAsync(userName);
+            return user as T;
         }
     }
 }
