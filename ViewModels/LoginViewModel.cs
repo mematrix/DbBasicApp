@@ -6,7 +6,7 @@ namespace DbBasicApp.ViewModels
     {
         [Required(ErrorMessage="登录名不可为空！")]
         [Display(Name = "登录名")]
-        public string Name { get; set; }
+        public string UserName { get; set; }
 
         [Required(ErrorMessage="密码不可为空！")]
         [DataType(DataType.Password)]
