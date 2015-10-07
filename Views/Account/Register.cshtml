@@ -1,5 +1,94 @@
+@model RegisterViewModel
+
 @{
-    ViewData["Title"] = "注册新用户";
+    ViewData["Title"] = "注册";
 }
 
 <h2>@(ViewData["Title"])</h2>
+
+<form asp-controller="Account" asp-action="Register" asp-anti-forgery="true" method="post" class="form-horizontal" role="form">
+    <h4>注册一个新用户</h4>
+    <hr />
+    <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="UserName" class="col-md-2 control-label required"></label>
+        <div class="col-md-10">
+            <input asp-for="UserName" class="form-control" />
+            <span asp-validation-for="UserName" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Password" class="col-md-2 control-label required"></label>
+        <div class="col-md-10">
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="ConfirmPassword" class="col-md-2 control-label required"></label>
+        <div class="col-md-10">
+            <input asp-for="ConfirmPassword" class="form-control" />
+            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+        </div>
+    </div>
+    
+    <div class="form-group" style="margin: auto 0px 15px 15px">
+        <h4 style="float: left;">个人信息</h4>
+        <hr class="col-md-8" style="margin-left: 6px;" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Name" class="col-md-2 control-label required"></label>
+        <div class="col-md-10">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Sex" class="col-md-2 control-label"></label>
+        <div class="col-md-10" style="padding-top: 7px;">
+            <input id="SexMale" name="Sex" type="radio" value="1" />
+            <label for="SexMale" style="margin-right: 6px;">男</label>
+            <input id="SexFemale" name="Sex" type="radio" value="2" />
+            <label for="SexFemale" style="margin-right: 6px;">女</label>
+            <input id="Sex" name="Sex" type="radio" value="0" checked="checked" />
+            <label for="Sex">未指定</label>
+            @{
+                var id = "Sex";
+                if (Model != null)
+                {
+                    if (Model.Sex == 1) { id = "SexMale"; }
+                    else if (Model.Sex == 2) { id = "SexFemale"; }
+                }
+                id = "'" + id + "'";
+                
+                <script>
+                    document.getElementById(@Html.Raw(id)).checked = "checked";
+                </script>
+            }
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Birthday" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Birthday" class="form-control" />
+            <span asp-validation-for="Birthday" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="CardID" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CardID" class="form-control" />
+            <span asp-validation-for="CardID" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary">注  册</button>
+        </div>
+        <span class="col-md-offset-2 col-md-10">带星号(*)的均为必填项。</span>
+    </div>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
