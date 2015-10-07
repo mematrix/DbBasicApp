@@ -1,55 +1,55 @@
-@using System.Collections.Generic
-@using Microsoft.AspNet.Http
-@using Microsoft.AspNet.Http.Authentication
-@model LoginViewModel
+@model LoginInfo
 
 @{
-    ViewData["Title"] = "个人信息";
+    ViewData["Title"] = (Model?.UserName) ?? "个人信息";
 }
 
-<h2>@(ViewData["Title"])</h2>
+<p style="height: 40px"></p>
 <div class="row">
-    <div class="col-md-8">
-        <section>
-            <form asp-controller="Home" asp-action="Login" asp-anti-forgery="true" method="post" class="form-horizontal" role="form">
-                <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Name" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label asp-for="Password" class="col-md-2 control-label"></label>
-                    <div class="col-md-10">
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-md-offset-2 col-md-10">
-                        <button type="submit" class="btn btn-default">登 录</button>
-                    </div>
-                </div>
-                <p>
-                    <a asp-action="Register">注册新用户</a>
-                </p>
-            </form>
-        </section>
-    </div>
     <div class="col-md-4">
-        <section>
-            <h4>暂时不想登录？</h4>
-            <p>
-                如果您已经注册了账号，那么即使在您未登录的情况下，也可以查看您的部分公开信息，例如账户余额等。
-                点击<a asp-controller="Home" asp-action="Search"><span class="label label-success">搜索</span></a>，
-                输入您的身份证号码即可（前提是您已经绑定了身份证号码）。
-            </p>
-        </section>
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#toggle-body">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <h3 class="panel-title">个人信息</h3>
+            </div>
+            <div class="panel-body panel-body-over" id="toggle-body" data-action="@Url.Action("GetChildItem", "Home")">
+                <a class="list-group-item activeitem" data-item="LoginView">登录信息</a>
+                <a class="list-group-item" data-item="UserInfoView">个人资料</a>
+                <a class="list-group-item" data-item="ConsumView">消费总览</a>
+                <a class="list-group-item list-group-item-sub" data-item="PayView">缴费记录</a>
+                <a class="list-group-item list-group-item-sub" data-item="DeductView">扣费记录</a>
+                <a class="list-group-item" data-item="CommentView">评价记录</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div id="child-content">
+            @await Html.PartialAsync("~/Views/Partial/LoginView.cshtml")
+        </div>
     </div>
 </div>
 
 @section scripts {
+    <script>
+        $(function() {
+            $("#toggle-body > a").click(function() {
+                toggleActive($(this));
+                var url = $("#toggle-body").attr("data-action");
+                $("#child-content").load(url, "item=" + $(this).attr("data-item"));
+            });
+        });
+        
+        function toggleActive(element) {
+            $("#toggle-body > a").each(function() {
+                $(this).removeClass("activeitem");
+            });
+            element.addClass("activeitem");
+        }
+    </script>
+    
     @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
