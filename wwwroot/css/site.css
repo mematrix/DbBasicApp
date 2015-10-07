@@ -31,4 +31,66 @@ textarea {
     .carousel-caption {
         z-index: 10 !important;
     }
+    
+    /* 保证当宽度不小于768px时，panel-body一定会显示 */
+    .panel-body.collapse {
+        display: block !important;
+        height: auto !important;
+    }
+}
+
+.required {
+    font-weight: bold;
+}
+
+label.required:after {
+    content: '*';
+}
+
+/* Panel内导航切换按钮样式 */
+.panel-heading .navbar-toggle {
+    margin-top: -5px;
+    padding: 6px;
+}
+
+.panel-success .navbar-toggle {
+    border-color: rgb(92, 184, 92);
+}
+
+.panel-success .navbar-toggle:hover {
+    background-color: rgb(92, 184, 92);
+}
+
+.panel-success .navbar-toggle .icon-bar {
+    background-color: rgb(138, 109, 59);
+}
+
+/* 设置Panel内容区域样式。包括活动项样式 */
+.panel-body-over {
+    padding: 5px 0px;
+}
+
+.activeitem {
+    font-weight: bold;
+    font-size: 120%;
+}
+
+.panel-body > .activeitem {
+    color: rgb(49, 112, 143);
+}
+
+.panel-body > .list-group-item {
+    border-width: 0px 0px 1px 0px;
+}
+
+.panel-body > .list-group-item:last-child {
+    border-width: 0px;
+}
+
+.list-group-item-sub {
+    padding: 10px 15px 10px 30px;
+}
+
+a.list-group-item {
+    cursor: pointer;
 }
