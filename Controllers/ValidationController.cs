@@ -1,21 +1,35 @@
 using Microsoft.AspNet.Mvc;
-using System.Text.RegularExpressions;
+using DbBasicApp.Models;
+using System.Linq;
+using System;
 
 namespace DbBasicApp.Controllers
 {
     public class ValidationController : Controller
     {
-        public JsonResult IsCardIDAvailable(string cardId)
+        [FromServices]
+        public AppDbContext DbContext { get; set; }
+
+        [HttpPost]
+        public JsonResult IsCardIDExisted(string cardId, string oldId = null)
         {
-            if(cardId.Length==0)
+            if (string.IsNullOrWhiteSpace(cardId) || cardId == oldId)
             {
                 return Json(true);
             }
-            if(Regex.IsMatch(cardId,@"^[1-9]\d{16}[\dxX]$"))
+            if (DbContext.UserInfos.Any(u => string.Equals(u.CardID, cardId, StringComparison.OrdinalIgnoreCase)))
+                return Json(false);
+            return Json(true);
+        }
+
+        [HttpPost]
+        public JsonResult IsUserNameExisted(string userName)
+        {
+            if (DbContext.LoginInfos.Any(l => string.Equals(l.UserName, userName, StringComparison.OrdinalIgnoreCase)))
             {
-                return Json("输入正确✅");
+                return Json(false);
             }
-            return Json("请输入正确的身份证号码！");
+            return Json(true);
         }
     }
 }
