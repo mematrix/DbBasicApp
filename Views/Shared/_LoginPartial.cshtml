@@ -1,5 +1,5 @@
 @using DbBasicApp.Services
-@inject AccountService<LoginInfo> Service
+@inject AccountService Service
 
 @{
     var user = await Service.GetCurrentUserAsync();
