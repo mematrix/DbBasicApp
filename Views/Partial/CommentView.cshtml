@@ -1,0 +1,23 @@
+@using System.Collections.Generic
+@model IEnumerable<RatingRecord>
+    
+@if (Model.Count() == 0)
+{
+    <div class="alert alert-info" role="alert">
+        <strong>提示：</strong>
+        看起来似乎没有评价记录。
+    </div>
+}
+else
+{
+    <div class="list-group">
+        @foreach (var rr in Model)
+        {
+            <a href="@Url.Action("Comment", "Home", new { id = rr.SupporterName })" class="list-group-item">
+                <h4 class="list-group-item-heading">@rr.SupporterName</h4>
+                <p class="list-group-item-text" style="color: rgb(154, 207, 234);">@rr.Time.ToString("yyyy-MM-dd HH:mm:ss")</p>
+                <p class="list-group-item-text">@rr.RatingMsg</p>
+            </a>
+        }
+    </div>
+}
