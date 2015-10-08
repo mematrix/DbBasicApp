@@ -1,0 +1,47 @@
+@model UserInfo
+
+@{
+    ViewData["Sex"] = Model.Sex.HasValue ? (Model.Sex.Value ? "男" : "女") : "未设置";
+    ViewData["Birth"] = Model.Birthday.HasValue ? Model.Birthday.Value.ToString("yyyy-MM-dd") : "未设置";
+    ViewData["Card"] = string.IsNullOrEmpty(Model.CardID) ? "未设置" : Model.CardID.Substring(0, 14) + "****";
+    ViewData["Pkg"] = (Model.TelPackage?.Name) ?? "未设置";
+}
+
+<div class="list-group">
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">姓名</h4>
+        <p class="list-group-item-text">@Model.Name</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">性别</h4>
+        <p class="list-group-item-text">@(ViewData["Sex"])</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">出生日期</h4>
+        <p class="list-group-item-text">@(ViewData["Birth"])</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">身份证号码</h4>
+        <p class="list-group-item-text">@(ViewData["Card"])</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">注册时间</h4>
+        <p class="list-group-item-text">@Model.RegisterTime.ToString("yyyy-MM-dd HH:mm")</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">最近一次结算用量</h4>
+        <p class="list-group-item-text">@Model.LastUsage 度(千瓦时 KW·h)</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">当前用量</h4>
+        <p class="list-group-item-text">@Model.CurrentUsage 度(千瓦时 KW·h)</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">账户余额</h4>
+        <p class="list-group-item-text">￥@Model.Balance</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-item-heading">套餐类型</h4>
+        <p class="list-group-item-text">@(ViewData["Pkg"])</p>
+    </div>
+</div>
