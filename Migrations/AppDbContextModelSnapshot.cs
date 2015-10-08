@@ -73,7 +73,7 @@ namespace DbBasicApp.Migrations
                     b.Property<string>("Msg")
                         .Annotation("Relational:ColumnName", "msg");
 
-                    b.Property<int>("PayOut")
+                    b.Property<double>("PayOut")
                         .Annotation("Relational:ColumnName", "pay_out");
 
                     b.Property<DateTime>("Time")
@@ -147,7 +147,7 @@ namespace DbBasicApp.Migrations
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "id");
 
-                    b.Property<int>("Balance")
+                    b.Property<double>("Balance")
                         .Annotation("Relational:ColumnName", "balance");
 
                     b.Property<DateTime?>("Birthday")
@@ -156,10 +156,10 @@ namespace DbBasicApp.Migrations
                     b.Property<string>("CardID")
                         .Annotation("Relational:ColumnName", "card_id");
 
-                    b.Property<int>("CurrentUsage")
+                    b.Property<double>("CurrentUsage")
                         .Annotation("Relational:ColumnName", "current_usage");
 
-                    b.Property<int>("LastUsage")
+                    b.Property<double>("LastUsage")
                         .Annotation("Relational:ColumnName", "last_usage");
 
                     b.Property<string>("Name")

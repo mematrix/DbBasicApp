@@ -4,7 +4,7 @@ using Microsoft.Data.Entity.Migrations;
 
 namespace DbBasicApp.Migrations
 {
-    public partial class TestMigration : Migration
+    public partial class TestChMigra : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -29,11 +29,11 @@ namespace DbBasicApp.Migrations
                 {
                     id = table.Column<int>(isNullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    balance = table.Column<int>(isNullable: false),
+                    balance = table.Column<double>(isNullable: false),
                     birthday = table.Column<DateTime>(isNullable: true),
                     card_id = table.Column<string>(isNullable: true),
-                    current_usage = table.Column<int>(isNullable: false),
-                    last_usage = table.Column<int>(isNullable: false),
+                    current_usage = table.Column<double>(isNullable: false),
+                    last_usage = table.Column<double>(isNullable: false),
                     name = table.Column<string>(isNullable: false),
                     pkg_id = table.Column<int>(isNullable: true),
                     reg_time = table.Column<DateTime>(isNullable: false),
@@ -100,7 +100,7 @@ namespace DbBasicApp.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     cashier_name = table.Column<string>(isNullable: true),
                     msg = table.Column<string>(isNullable: true),
-                    pay_out = table.Column<int>(isNullable: false),
+                    pay_out = table.Column<double>(isNullable: false),
                     time = table.Column<DateTime>(isNullable: false),
                     user_name = table.Column<string>(isNullable: false)
                 },
