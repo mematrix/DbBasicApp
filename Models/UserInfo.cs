@@ -1,6 +1,5 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNet.Mvc;
 
 namespace DbBasicApp.Models
 {
@@ -11,9 +10,9 @@ namespace DbBasicApp.Models
         [Key, Column("id")]
         public int ID { get; set; }
 
-        [Required(ErrorMessage = "姓名为必填项"), Column("name")]
-        [RegularExpression(@"^([\u4e00-\u9fa5]{2,18})|((?!\s)[A-Za-z ]{0,30}[A-Za-z])$",
-            ErrorMessage = "请输入正确的名称！")]
+        [Required, Column("name")]
+        //[RegularExpression(@"^([\u4e00-\u9fa5]{2,18})|((?!\s)[A-Za-z ]{0,30}[A-Za-z])$",
+        //    ErrorMessage = "请输入正确的名称！")]
         [Display(Name = "姓名")]
         public string Name { get; set; }
 
@@ -25,23 +24,23 @@ namespace DbBasicApp.Models
         [Display(Name = "出生日期")]
         public System.DateTime? Birthday { get; set; }
 
-        [Column("card_id")]
-        [Remote("IsCardIDAvailable", "Validation")]
+        [Required, Column("card_id")]
+        //[Remote("IsCardIDAvailable", "Validation")]
         [Display(Name = "身份证号码")]
         public string CardID { get; set; }
 
         [Required, Column("last_usage")]
         [Display(Name = "最近一次统计用量")]
-        public int LastUsage { get; set; }
+        public double LastUsage { get; set; }
 
         [Required, Column("current_usage")]
         [Display(Name = "当前用量")]
-        public int CurrentUsage { get; set; }
+        public double CurrentUsage { get; set; }
 
         [Required, Column("balance")]
         [DisplayFormat(DataFormatString = "{0:c}", ApplyFormatInEditMode = true)]
         [Display(Name = "账户余额")]
-        public int Balance { get; set; }
+        public double Balance { get; set; }
 
         [Required, Column("reg_time")]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd hh:mm}")]

@@ -10,7 +10,7 @@ namespace DbBasicApp.Models
         public int ID { get; set; }
 
         [Required(ErrorMessage = "请选择一个分数"), Column("rating")]
-        [Range(1, 5, ErrorMessage = "数值大小超出索引范围")]
+        //[Range(1, 5, ErrorMessage = "数值大小超出索引范围")]
         [Display(Name = "评分")]
         public int Rating { get; set; }
 

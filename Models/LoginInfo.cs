@@ -10,13 +10,13 @@ namespace DbBasicApp.Models
     public class LoginInfo : ISignInInfo
     {
         [Key, Column("user_name")]
-        [RegularExpression(@"^[\w\u4e00-\u9fa5]{3,30}$",
-            ErrorMessage = "登录名只能由汉字、数字、字母及下划线组成，并且长度在3到30之间。")]
+        //[RegularExpression(@"^[\w\u4e00-\u9fa5]{3,30}$",
+        //    ErrorMessage = "登录名只能由汉字、数字、字母及下划线组成，并且长度在3到30之间。")]
         [Display(Name = "登录名")]
         public string UserName { get; set; }
 
         [Required, Column("password")]
-        [RegularExpression(@"^\w{6,25}$", ErrorMessage = "密码只能由字母、数字及下划线组成，长度在6到25位之间。")]
+        //[RegularExpression(@"^\w{6,25}$", ErrorMessage = "密码只能由字母、数字及下划线组成，长度在6到25位之间。")]
         [DataType(DataType.Password)]
         [Display(Name = "登录密码")]
         public string Password { get; set; }

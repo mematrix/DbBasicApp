@@ -11,7 +11,7 @@ namespace DbBasicApp.Models
         public int ID { get; set; }
 
         [Required, Column("pay_out")]
-        public int PayOut { get; set; }
+        public double PayOut { get; set; }
 
         [Required, Column("time")]
         public System.DateTime Time { get; set; }
