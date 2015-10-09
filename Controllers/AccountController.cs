@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using DbBasicApp.Filters;
 using DbBasicApp.Models;
@@ -11,11 +12,11 @@ namespace DbBasicApp.Controllers
 {
     public class AccountController : Controller
     {
-        private AccountService<LoginInfo> _service;
+        private AccountService _service;
         private AppDbContext _context;
         private static bool _dbChecked;
 
-        public AccountController(AccountService<LoginInfo> service, AppDbContext context)
+        public AccountController(AccountService service, AppDbContext context)
         {
             _service = service;
             _context = context;
@@ -64,26 +65,26 @@ namespace DbBasicApp.Controllers
             if (ModelState.IsValid)
             {
                 if (await _context.LoginInfos.AnyAsync(l =>
-                     l.UserName.Equals(model.UserName, StringComparison.OrdinalIgnoreCase)))
+                    l.UserName.Equals(model.UserName, StringComparison.OrdinalIgnoreCase)))
                 {
                     ModelState.AddModelError("UserName", "用户名已存在！");
                     return View(model);
                 }
-                if (!string.IsNullOrWhiteSpace(model.CardID))
-                {
-                    model.CardID = model.CardID.Trim();
                     /* if (!Regex.IsMatch(model.CardID, @"^[1-9]\d{16}[\dxX]$"))
                     {
                         ModelState.AddModelError("CardId", "请输入正确格式的身份证号码！");
                         return View(model);
                     } */
-                    if (await _context.UserInfos.AnyAsync(u =>
-                         string.Equals(u.CardID, model.CardID, StringComparison.OrdinalIgnoreCase)))
-                    {
-                        ModelState.AddModelError("CardId", "您输入的身份证号码已存在！");
-                        return View(model);
-                    }
+                if (await _context.UserInfos.AnyAsync(u =>
+                    string.Equals(u.CardID, model.CardID, StringComparison.OrdinalIgnoreCase)))
+                {
+                    ModelState.AddModelError("CardId", "您输入的身份证号码已存在！");
+                    return View(model);
                 }
+                Debug.WriteLine("UserName: " + model.UserName);
+                //  ModelState.AddModelError("UserName", model.UserName);
+                //  ModelState.AddModelError("Name", model.Name);
+                //  return View(model);
 
                 bool? sex = null;
                 if (model.Sex == 1)
@@ -131,10 +132,16 @@ namespace DbBasicApp.Controllers
         public async Task<IActionResult> LogOff()
         {
             await _service.SignOutAsync();
-            return RedirectToAction(nameof(AccountController.Login));
+            return RedirectToAction(nameof(AccountController.Login), new { returnUrl = "" });
         }
 
         public IActionResult Search()
+        {
+            return View();
+        }
+
+        [CustomAuth]
+        public IActionResult ChangePassword()
         {
             return View();
         }
