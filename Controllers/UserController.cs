@@ -33,7 +33,7 @@ namespace DbBasicApp.Controllers
             var model = await DbContext.LoginInfos.Include(l => l.UserInfo)
                 .Where(l => l.UserName.Contains(q))
                 .ToListAsync();
-            return PartialView("~/Views/Partial/SearchResult.cshtml", model);
+            return PartialView("~/Views/Partial/SearchResultView.cshtml", model);
         }
 
         public async Task<IActionResult> UserInfo(string id)
@@ -41,10 +41,13 @@ namespace DbBasicApp.Controllers
             var user = await Service.GetCurrentUserAsync();
             var model = await DbContext.LoginInfos.Include(l => l.UserInfo)
                 .FirstOrDefaultAsync(l => l.UserName == id);
-            if (user != null && model == null)
+            // 在用户已经登录的情况下，如果访问了一个不存在的用户的信息，
+            // 又或者访问的id为自己，那么将跳转到用户自己主页面。
+            if (user != null && (model == null || model.UserName == user.UserName))
             {
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(HomeController.Index), "Home");
             }
+            
             ViewData["IsLogin"] = user != null;
             return View(model);
         }
@@ -52,15 +55,27 @@ namespace DbBasicApp.Controllers
         [CustomAuth]
         public async Task<IActionResult> Comment(string id)
         {
-            var user = await DbContext.LoginInfos.FirstOrDefaultAsync(l => l.UserName == id);
-            return View(user);
+            var user = await Service.GetCurrentUserAsync();
+            if (user.UserName == id)
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            
+            var model = await DbContext.LoginInfos.FirstOrDefaultAsync(l => l.UserName == id);
+            return View(model);
         }
 
         [CustomAuth]
         public async Task<IActionResult> Chat(string id)
         {
-            var user = await DbContext.LoginInfos.FirstOrDefaultAsync(l => l.UserName == id);
-            return View(user);
+            var user = await Service.GetCurrentUserAsync();
+            if (user.UserName == id)
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            
+            var model = await DbContext.LoginInfos.FirstOrDefaultAsync(l => l.UserName == id);
+            return View(model);
         }
     }
 }
