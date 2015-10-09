@@ -154,6 +154,7 @@ namespace DbBasicApp.Migrations
                         .Annotation("Relational:ColumnName", "birthday");
 
                     b.Property<string>("CardID")
+                        .Required()
                         .Annotation("Relational:ColumnName", "card_id");
 
                     b.Property<double>("CurrentUsage")

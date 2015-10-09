@@ -12,7 +12,7 @@ namespace DbBasicApp.Migrations
     {
         public override string Id
         {
-            get { return "20151008014258_TestChMigra"; }
+            get { return "20151008040337_TestChMigra"; }
         }
 
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -159,6 +159,7 @@ namespace DbBasicApp.Migrations
                         .Annotation("Relational:ColumnName", "birthday");
 
                     b.Property<string>("CardID")
+                        .Required()
                         .Annotation("Relational:ColumnName", "card_id");
 
                     b.Property<double>("CurrentUsage")

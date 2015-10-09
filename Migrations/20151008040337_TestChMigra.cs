@@ -31,7 +31,7 @@ namespace DbBasicApp.Migrations
                         .Annotation("Sqlite:Autoincrement", true),
                     balance = table.Column<double>(isNullable: false),
                     birthday = table.Column<DateTime>(isNullable: true),
-                    card_id = table.Column<string>(isNullable: true),
+                    card_id = table.Column<string>(isNullable: false),
                     current_usage = table.Column<double>(isNullable: false),
                     last_usage = table.Column<double>(isNullable: false),
                     name = table.Column<string>(isNullable: false),
