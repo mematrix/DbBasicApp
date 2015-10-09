@@ -1,0 +1,58 @@
+@model LoginInfo
+
+@{
+    ViewData["Title"] = Model == null ? "出错了" : Model.UserName + "的个人信息";
+}
+
+@if (Model == null)
+{
+    <div class="alert alert-danger" role="alert" style="margin-top: 40px; margin-bottom: 40px">
+        <strong>出错了！</strong>
+        您查看的信息不存在。
+    </div>
+}
+else
+{
+    @{ 
+        ViewData["Level"] = Model.Level == 1 ? "客服" : (Model.Level == 2 ? "工作人员" : "普通用户");
+        ViewData["Sex"] = (Model.UserInfo.Sex?.Value ? "男" : "女") ?? "未设置";
+    }
+    
+    <div class="page-header">
+        <h2>@(Model.UserName)的信息</h2>
+    </div>
+    <div class="form-horizontal">
+        <div class="form-group">
+            <label asp-for="UserName" class="col-md-2 control-label"></label>
+            <span class="col-md-10" style="padding-top: 7px;">@Model.UserName</span>
+        </div>
+        <div class="form-group">
+            <label asp-for="UserInfo.Sex" class="col-md-2 control-label"></label>
+            <span class="col-md-10" style="padding-top: 7px;">@(ViewData["Sex"])</span>
+        </div>
+        <div class="form-group">
+            <label asp-for="UserInfo.RegisterTime" class="col-md-2 control-label"></label>
+            <span class="col-md-10" style="padding-top: 7px;">@(Model.UserInfo.RegisterTime.ToString("yyyy-MM-dd HH:mm"))</span>
+        </div>
+        <div class="form-group">
+            <label asp-for="Level" class="col-md-2 control-label"></label>
+            <span class="col-md-10" style="padding-top: 7px;">@(ViewData["Level"])</span>
+        </div>
+        @if ((bool)ViewData["IsLogin"])
+        {
+            <div class="form-group">
+                <p class="col-md-offset-1">
+                    <a href="@Url.Action("Chat", "User", new { id = Model.UserName })">
+                        <button type="button" class="btn btn-success">与TA聊天</button>
+                    </a>
+                    @if (Model.Level == 1 || Model.Level == 2)
+                    {
+                        <a href="@Url.Action("Comment", "User", new { id = Model.UserName })">
+                            <button type="button" class="btn btn-info">评价TA</button>
+                        </a>
+                    }
+                </p>
+            </div>
+        }
+    </div>
+}
