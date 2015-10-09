@@ -1,0 +1,37 @@
+@using System.Collections.Generic
+@model IList<LoginInfo>
+
+@if (Model.Count == 0)
+{
+    <div class="well">
+        <p>没有搜索到相关用户。</p>
+    </div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <th>#</th>
+            <th>用户名</th>
+            <th>性别</th>
+            <th>用户类型</th>
+            <th>注册时间</th>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                @var user = Model[i];
+                @var sex = (user.UserInfo.Sex?.Value ? "男" : "女") ?? "未设置";
+                @var type = user.Level == 1 ? "客服" : (user.Level == 2 ? "工作人员" : "普通用户");
+                
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@user.UserName</td>
+                    <td>@sex</td>
+                    <td>@type</td>
+                    <td>@user.UserInfo.RegisterTime.ToString("yyyy-MM-dd HH:mm")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
