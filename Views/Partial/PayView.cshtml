@@ -21,7 +21,16 @@
                         <td>@i</td>
                         <td>@pr.Time.ToString("yyyy-MM-dd HH:mm:ss")</td>
                         <td>@pr.PayOut</td>
-                        <td>@pr.CashierName</td>
+                        if (string.IsNullOrEmpty(pr.CashierName))
+                        {
+                            <td></td>
+                        }
+                        else
+                        {
+                            <td>
+                                <a href="@Url.Action("UserInfo", "User", new { id = pr.CashierName })">@pr.CashierName</a>
+                            </td>
+                        }
                         <td>@pr.Msg</td>
                     </tr>
                     

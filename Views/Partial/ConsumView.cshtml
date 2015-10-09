@@ -30,7 +30,16 @@
                         {
                             <td>缴费</td>
                         }
-                        <td>@pr.CashierName</td>
+                        if (string.IsNullOrEmpty(pr.CashierName))
+                        {
+                            <td></td>
+                        }
+                        else
+                        {
+                            <td>
+                                <a href="@Url.Action("UserInfo", "User", new { id = pr.CashierName })">@pr.CashierName</a>
+                            </td>
+                        }
                         <td>@pr.Msg</td>
                     </tr>
                     

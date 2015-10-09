@@ -46,7 +46,9 @@
                         
                         <tr>
                             <td>@(i + 1)</td>
-                            <td>@user.UserName</td>
+                            <td>
+                                <a href="@Url.Action("UserInfo", "User", new { id = user.UserName })">@user.UserName</a>
+                            </td>
                             @if (user.Level == 1)
                             {
                                 <td>客服</td>
