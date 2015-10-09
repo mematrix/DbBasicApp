@@ -1,23 +1,21 @@
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Mvc;
 using DbBasicApp.Filters;
 using DbBasicApp.Models;
 using DbBasicApp.Services;
-using Microsoft.AspNet.Mvc;
 
 namespace DbBasicApp.Controllers
 {
     public class HomeController : Controller
     {
         [FromServices]
-        public AccountService<LoginInfo> Service { get; set; }
+        public AccountService Service { get; set; }
 
         [FromServices]
         public AppDbContext DbContext { get; set; }
 
-        //[CustomAuth]
+        [CustomAuth]
         public async Task<IActionResult> Index()
         {
             var user = await Service.GetCurrentUserAsync();
@@ -29,27 +27,38 @@ namespace DbBasicApp.Controllers
         {
             var viewName = item;
             object model = null;
-            var user = await Service.GetCurrentUserAsync();
-            switch (item.ToLower())
+            try
             {
-                case "loginview": model = user; break;
-                case "userinfoview": model = user.UserInfo; break;
-                case "consumview": model = DbContext.PaymentRecords.Where(p => p.UserName == user.UserName); break;
-                case "payview":
-                    model = DbContext.PaymentRecords.Where(p => p.UserName == user.UserName && p.PayOut > 0);
-                    break;
-                case "deductview":
-                    model = DbContext.PaymentRecords.Where(p => p.UserName == user.UserName && p.PayOut < 0);
-                    break;
-                case "commentview":
-                    model = DbContext.RatingRecords.Where(r => r.UserName == user.UserName)
-                        .OrderByDescending(r => r.Time)
-                        .GroupBy(r => r.SupporterName)
-                        .Select(g => g.First());
-                    break;
-                default: viewName = "Default"; break;
+                var user = await Service.GetCurrentUserAsync();
+                switch (item.ToLower())
+                {
+                    case "loginview": model = user; break;
+                    case "userinfoview": model = user.UserInfo; break;
+                    case "consumview": model = DbContext.PaymentRecords.Where(p => p.UserName == user.UserName); break;
+                    case "payview":
+                        model = DbContext.PaymentRecords.Where(p => p.UserName == user.UserName && p.PayOut > 0);
+                        break;
+                    case "deductview":
+                        model = DbContext.PaymentRecords.Where(p => p.UserName == user.UserName && p.PayOut < 0);
+                        break;
+                    case "commentview":
+                        model = DbContext.RatingRecords.Where(r => r.UserName == user.UserName)
+                            .OrderByDescending(r => r.Time)
+                            .GroupBy(r => r.SupporterName)
+                            .Select(g => g.First());
+                        break;
+                    default: viewName = "Default"; break;
+                }
+                if (model == null)
+                {
+                    viewName = "Default";
+                }
+                return PartialView("~/Views/Partial/" + viewName + ".cshtml", model);
             }
-            return PartialView("~/Views/Partial/" + viewName + ".cshtml", model);
+            catch
+            {
+                return PartialView("~/Views/Partial/Default.cshtml");
+            }
         }
 
         public IActionResult About()
