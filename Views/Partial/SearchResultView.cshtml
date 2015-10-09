@@ -26,10 +26,12 @@ else
                 
                 <tr>
                     <td>@(i + 1)</td>
-                    <td>@user.UserName</td>
+                    <td>
+                        <a href="@Url.Action("UserInfo", "User", new { id = user.UserName })">@user.UserName</a>
+                    </td>
                     <td>@sex</td>
                     <td>@type</td>
-                    <td>@user.UserInfo.RegisterTime.ToString("yyyy-MM-dd HH:mm")</td>
+                    <td>@(user.UserInfo.RegisterTime.ToString("yyyy-MM-dd HH:mm"))</td>
                 </tr>
             }
         </tbody>
