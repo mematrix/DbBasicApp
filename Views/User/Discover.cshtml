@@ -11,10 +11,10 @@
         <form id="userSearch" method="get" action="@Url.Action("SearchUser", "User")" class="form-horizontal" role="form">
             <h4>搜索其它用户</h4>
             <hr />
-            <div class="from-group">
+            <div class="form-group">
                 <div class="col-md-10">
-                    <input class="form-control" type="text" name="q" style="display: inline-block" />
-                    <button type="submit" class="btn btn-default">搜 索</button>
+                    <input class="form-control" type="text" id="q" name="q" style="display: inline-block" />
+                    <button type="submit" class="btn btn-primary">搜 索</button>
                 </div>
                 <span class="col-md-10">输入用户名进行搜索</span>
             </div>
@@ -42,7 +42,7 @@
                 <tbody>
                     @for (int i = 0; i < Model.Count; i++)
                     {
-                        @var user = Model[i];
+                        var user = Model[i];
                         
                         <tr>
                             <td>@(i + 1)</td>
@@ -69,6 +69,10 @@
     <script>
         $("#userSearch").submit(function(event){
             event.preventDefault();
+            if ($("#q").value == "")
+            {
+                return;
+            }
             
             var form = $(this);
             $.ajax({
