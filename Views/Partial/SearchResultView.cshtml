@@ -20,9 +20,9 @@ else
         <tbody>
             @for (int i = 0; i < Model.Count; i++)
             {
-                @var user = Model[i];
-                @var sex = (user.UserInfo.Sex?.Value ? "男" : "女") ?? "未设置";
-                @var type = user.Level == 1 ? "客服" : (user.Level == 2 ? "工作人员" : "普通用户");
+                var user = Model[i];
+                var sex = user.UserInfo.Sex.HasValue ? (user.UserInfo.Sex.Value ? "男" : "女") : "未设置";
+                var type = user.Level == 1 ? "客服" : (user.Level == 2 ? "工作人员" : "普通用户");
                 
                 <tr>
                     <td>@(i + 1)</td>
