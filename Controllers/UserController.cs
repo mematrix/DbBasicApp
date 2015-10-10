@@ -29,7 +29,7 @@ namespace DbBasicApp.Controllers
 
         public async Task<IActionResult> SearchUser(string q)
         {
-            if (string.IsNullOrWhiteSpace(q)) return null;
+            if (string.IsNullOrWhiteSpace(q)) return new EmptyResult();
             var model = await DbContext.LoginInfos.Include(l => l.UserInfo)
                 .Where(l => l.UserName.Contains(q))
                 .ToListAsync();
