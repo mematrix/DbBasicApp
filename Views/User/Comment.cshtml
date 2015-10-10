@@ -1,0 +1,9 @@
+@model LoginInfo
+
+@{
+    ViewData["Title"] = Model == null ? "出错了" : $"评论 { Model.UserName }";
+}
+
+<div class="page-header">
+    <h1>@(ViewData["Title"])</h1>
+</div>
