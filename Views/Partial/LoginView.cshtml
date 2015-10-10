@@ -1,7 +1,7 @@
 @model LoginInfo
 
 @{
-    switch (Model?.Level)
+    switch (Model.Level)
     {
         case 1: ViewData["Level"] = "客服人员"; break;
         case 2: ViewData["Level"] = "收款员"; break;
