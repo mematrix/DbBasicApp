@@ -13,10 +13,8 @@
 }
 else
 {
-    @{ 
-        ViewData["Level"] = Model.Level == 1 ? "客服" : (Model.Level == 2 ? "工作人员" : "普通用户");
-        ViewData["Sex"] = (Model.UserInfo.Sex?.Value ? "男" : "女") ?? "未设置";
-    }
+    ViewData["Level"] = Model.Level == 1 ? "客服" : (Model.Level == 2 ? "工作人员" : "普通用户");
+    ViewData["Sex"] = Model.UserInfo.Sex.HasValue ? (Model.UserInfo.Sex.Value ? "男" : "女") : "未设置";
     
     <div class="page-header">
         <h2>@(Model.UserName)的信息</h2>
