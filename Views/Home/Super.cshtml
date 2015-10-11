@@ -1,0 +1,50 @@
+@using System.Collections.Generic
+@model IList<LoginInfo>
+    
+@{
+    ViewData["Title"] = "管理用户";
+}
+
+<div class="page-header">
+    <h1>@(ViewData["Title"])</h1>
+</div>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <th>#</th>
+            <th>用户名</th>
+            <th>姓名</th>
+            <th>性别</th>
+            <th>身份证号码</th>
+            <th>注册时间</th>
+            <th>用户身份</th>
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var user = Model[i];
+                var sex = user.UserInfo.Sex.HasValue ? (user.UserInfo.Sex.Value ? "男" : "女") : "未设置";
+                var level = user.Level == 1 ? "客服" : (user.Level == 2 ? "工作人员" : "普通用户");
+                
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@user.UserName</td>
+                    <td>@user.UserInfo.Name</td>
+                    <td>@sex</td>
+                    <td>@user.UserInfo.CardID</td>
+                    <td>@(user.UserInfo.RegisterTime.ToString("yyyy-MM-dd HH:mm"))</td>
+                    <td>@level <a style="cursor: pointer;" data-val data-name="@user.UserName" data-level="@user.Level">修改</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@section scripts {
+    <script>
+        $("a[data-val]").click(function() {
+            var name = $(this).attr("data-name");
+            var level = $(this).attr("data-level");
+        })
+    </script>
+}
