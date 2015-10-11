@@ -4,6 +4,7 @@ using Microsoft.AspNet.Mvc;
 using DbBasicApp.Filters;
 using DbBasicApp.Models;
 using DbBasicApp.Services;
+using Microsoft.Data.Entity;
 
 namespace DbBasicApp.Controllers
 {
@@ -66,6 +67,27 @@ namespace DbBasicApp.Controllers
             ViewData["Message"] = "Your application description page.";
 
             return View();
+        }
+
+        public async Task<IActionResult> Super()
+        {
+            var model = await DbContext.LoginInfos.Include(l => l.UserInfo).ToListAsync();
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> SetLevel(string userName, int level)
+        {
+            if (level > 2 || level < 0) return Json(new { status = false, msg = "错误的身份设置！" });
+            
+            var user = await DbContext.LoginInfos.FirstOrDefaultAsync(l => l.UserName == userName);
+            if (user == null) return Json(new { status = false, msg = "用户不存在！" });
+            
+            var update = user.Level != level;
+            user.Level = level;
+            DbContext.LoginInfos.Update(user);
+            await DbContext.SaveChangesAsync();
+            return Json(new { status = true, msg = "操作成功", update = update, nlevel = level });
         }
 
         public IActionResult Contact()
