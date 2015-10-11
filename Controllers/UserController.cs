@@ -47,7 +47,7 @@ namespace DbBasicApp.Controllers
             {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
-            
+
             ViewData["IsLogin"] = user != null;
             return View(model);
         }
@@ -60,9 +60,27 @@ namespace DbBasicApp.Controllers
             {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
-            
-            var model = await DbContext.LoginInfos.FirstOrDefaultAsync(l => l.UserName == id);
+
+            var model = await DbContext.LoginInfos.Include(l => l.UserInfo).FirstOrDefaultAsync(l => l.UserName == id);
+            ViewData["Rating"] = 0;
+            if (model != null)
+            {
+                var rating = await DbContext.RatingRecords.FirstOrDefaultAsync(r =>
+                    r.UserName == user.UserName && r.SupporterName == model.UserName);
+                if (rating != null)
+                {
+                    ViewData["Comment"] = rating.RatingMsg;
+                    ViewData["Rating"] = rating.Rating;
+                }
+            }
             return View(model);
+        }
+
+        [HttpPost]
+        [CustomAuth]
+        public async Task<IActionResult> Comment(string userName, int rating, string comment)
+        {
+            return View();
         }
 
         [CustomAuth]
@@ -73,7 +91,7 @@ namespace DbBasicApp.Controllers
             {
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
-            
+
             var model = await DbContext.LoginInfos.FirstOrDefaultAsync(l => l.UserName == id);
             return View(model);
         }
