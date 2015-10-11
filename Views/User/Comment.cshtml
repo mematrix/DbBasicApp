@@ -4,6 +4,92 @@
     ViewData["Title"] = Model == null ? "出错了" : $"评论 { Model.UserName }";
 }
 
-<div class="page-header">
-    <h1>@(ViewData["Title"])</h1>
-</div>
+@if (Model == null)
+{
+    <div class="alert alert-danger" role="alert">
+        <strong>出错了！</strong>
+        很抱歉，您访问的资源可能不存在。
+    </div>
+}
+else if (Model.Level == 0)
+{
+    <div class="alert alert-warning" role="alert">
+        <strong>提示：</strong>
+        不正确的访问；您无法对当前用户进行此操作。
+    </div>
+}
+else
+{
+    ViewData["Level"] = Model.Level == 1 ? "客服" : "工作人员";
+    ViewData["Sex"] = Model.UserInfo.Sex.HasValue ? (Model.UserInfo.Sex.Value ? "男" : "女") : "未设置";
+    
+    <div class="page-header">
+        <h1>@(ViewData["Title"])</h1>
+    </div>
+    <p>
+        <table class="table table-striped">
+            <thead>
+                <th>用户名</th>
+                <th>用户身份</th>
+                <th>性别</th>
+                <th>注册时间</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>@Model.UserName</td>
+                    <td>@(ViewData["Level"])</td>
+                    <td>@(ViewData["Sex"])</td>
+                    <td>@(Model.UserInfo.RegisterTime.ToString("yyyy-MM-dd HH:mm"))</td>
+                </tr>
+            </tbody>
+        </table>
+    </p>
+    <form asp-action="Comment" asp-controller="User" method="post" asp-anti-forgery="true" id="comment-form" class="form-horizontal" role="form">
+        <input type="hidden" name="username" id="username" value="@(Model.UserName)" />
+        <h4>请选择一个评分</h4>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-8">
+                <input name="rating" id="rating" class="rating" type="number" min="0" step="1" value="@(ViewData["Rating"])" >
+                <span class="text-danger field-validation-valid" data-valmsg-for="rating"></span>
+            </div>
+        </div>
+        <h4>写下您的评价</h4>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-8">
+                <textarea name="comment" id="comment" style="height: 90px; max-height: 90px;">@(ViewData["Comment"])</textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-8">
+                <button type="submit" class="btn btn-info">提 交</button>
+            </div>
+        </div>
+    </form>
+}
+
+@section scripts {
+    <environment names="Development">
+        <script src="~/lib/bootstrap-star-rating/js/star-rating.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/bootstrap-star-rating/js/star-rating.min.js"></script>
+    </environment>
+    
+    <script>
+        $("#comment-form").submit(function(event) {
+            if ($("rating").value == 0) {
+                event.preventDefault();
+                $("span[data-valmsg-for='rating']").text("评分不可为空！").show();
+            }
+        })
+        
+        $("#rating").on("rating.change", function(enent, value, caption) {
+            if (value == 0) {
+                $("span[data-valmsg-for='rating']").text("评分不可为空！").show();
+            }
+            else {
+                $("span[data-valmsg-for='rating']").hide();
+            }
+        })
+    </script>
+}
