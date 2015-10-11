@@ -3,10 +3,32 @@
   "private": true,
   "dependencies": {
     "bootstrap": "3.0.0",
+    "bootstrap-star-rating": "~3.5.4",
     "bootstrap-touch-carousel": "0.8.0",
     "hammer.js": "2.0.4",
     "jquery": "2.1.4",
     "jquery-validation": "1.11.1",
     "jquery-validation-unobtrusive": "3.2.2"
-  }
+  },
+  "version": "1.0.0",
+  "homepage": "https://github.com/3meng/DbBasicApp",
+  "authors": [
+    "qife"
+  ],
+  "description": "A project for database course design using MVC.",
+  "moduleType": [
+    "globals"
+  ],
+  "keywords": [
+    "mvc"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "wwwroot/lib",
+    "test",
+    "tests"
+  ]
 }
