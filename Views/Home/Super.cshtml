@@ -33,18 +33,100 @@
                     <td>@sex</td>
                     <td>@user.UserInfo.CardID</td>
                     <td>@(user.UserInfo.RegisterTime.ToString("yyyy-MM-dd HH:mm"))</td>
-                    <td>@level <a style="cursor: pointer;" data-val data-name="@user.UserName" data-level="@user.Level">修改</a></td>
+                    <td>
+                        <span style="margin-right: 5px;" data-name="@user.UserName">@level</span>
+                        <a style="cursor: pointer;" data-name="@user.UserName" data-level="@user.Level">修改</a>
+                    </td>
                 </tr>
             }
         </tbody>
     </table>
 </div>
 
+<!-- 模态窗口 -->
+<div class="modal fade" id="setLevelModal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modalTitle" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">修改用户身份</h4>
+            </div>
+            <form method="post" id="setForm" asp-action="SetLevel" asp-controller="Home">
+                <div class="modal-body">
+                    <div class="alert alert-danger" id="errorAlert" role="alert" style="display: none;">
+                        <strong>提示：</strong>
+                        在操作期间出现了一些错误，请重试。
+                    </div>
+                    <input type="hidden" name="userName" id="userName" >
+                    <h4 id="showName"></h4>
+                    <h4>选择用户身份：</h4>
+                    <div id="radioDiv">
+                        <input type="radio" name="level" id="UserLevel" value="0" >
+                        <label for="UserLevel" style="margin-right: 6px;">普通用户</label>
+                        <input type="radio" name="level" id="SuppLevel" value="1" >
+                        <label for="SuppLevel" style="margin-right: 6px;">客服</label>
+                        <input type="radio" name="level" id="CashierLevel" value="2" >
+                        <label for="CashierLevel">工作人员</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="model">关 闭</button>
+                    <button type="submit" class="btn btn-primary">提交更改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @section scripts {
     <script>
-        $("a[data-val]").click(function() {
+        $("a[data-name]").click(function() {
             var name = $(this).attr("data-name");
             var level = $(this).attr("data-level");
-        })
+            $("#userName").value = name;
+            $("#showName").text("用户名：" + name);
+            $("#radioDiv > input").removeAttr("checked");
+            if (level == 1) {
+                $("#SuppLevel").attr("checked", "checked");
+            } else if (level == 2) {
+                $("#CashierLevel").attr("checked", "checked");
+            } else {
+                $("#UserLevel").attr("checked", "checked");
+            }
+            
+            $("#setLevelModal").modal("show");
+        });
+        
+        $("#setForm").submit(function(event) {
+            event.preventDefault();
+            
+            var form = $(this);
+            $.ajax({
+                type: "POST",
+                url: form.attr("action"),
+                data: form.serialize(),
+                beforeSend: function() {
+                    $("#errorAlert").hide();
+                    $(".modal-footer > button").attr("disabled", "disabled");
+                },
+                complete: function() {
+                    $(".modal-footer > button").removeAttr("disabled");
+                },
+                error: function() {
+                    $("#errorAlert").show();
+                },
+                success: function(data) {
+                    if (!data.status) {
+                        $("#errorAlert").show();
+                        return;
+                    }
+                    
+                    var name = $("#userName").value;
+                    $("a[data-name='" + name + "']").arrt("data-level", data.nLevel);
+                    var le = data.nLevel == 1 ? "客服" : (data.nLevel == 2 ? "工作人员" : "普通用户");
+                    $("span[data-name='" + name + "']").text(le);
+                    $("#setLevelModal").modal("hide");
+                }
+            });
+        });
     </script>
 }
