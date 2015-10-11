@@ -78,6 +78,7 @@ namespace DbBasicApp.Controllers
 
         [HttpPost]
         [CustomAuth]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Comment(string userName, int rating, string comment)
         {
             return View();
