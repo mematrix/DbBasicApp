@@ -16,9 +16,18 @@ else
             <a href="@Url.Action("Comment", "User", new { id = rr.SupporterName })" class="list-group-item">
                 <h4 class="list-group-item-heading">@rr.SupporterName</h4>
                 <p class="list-group-item-text" style="color: rgb(154, 207, 234);">@(rr.Time.ToString("yyyy-MM-dd HH:mm:ss"))</p>
+                <div style="margin: 6px 0px;">
+                    <input type="number" class="rating" data-readonly="true" value="@rr.Rating" >
+                </div>
                 <p class="list-group-item-text">@rr.RatingMsg</p>
-                <p class="list-group-item-text" style="color: rgb(92, 184, 92);">评分：@rr.Rating</p>
             </a>
         }
     </div>
+    
+    <environment names="Development">
+        <script src="~/lib/bootstrap-star-rating/js/star-rating.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/bootstrap-star-rating/js/star-rating.min.js"></script>
+    </environment>
 }
