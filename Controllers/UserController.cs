@@ -61,18 +61,30 @@ namespace DbBasicApp.Controllers
                 return RedirectToAction(nameof(HomeController.Index), "Home");
             }
 
-            var model = await DbContext.LoginInfos.Include(l => l.UserInfo).FirstOrDefaultAsync(l => l.UserName == id);
-            ViewData["Rating"] = 0;
-            if (model != null)
+            RatingRecord model = null;
+            var supUser = await DbContext.LoginInfos.Include(l => l.UserInfo).FirstOrDefaultAsync(l => l.UserName == id);
+            if (supUser != null)
             {
-                var rating = await DbContext.RatingRecords.FirstOrDefaultAsync(r =>
-                    r.UserName == user.UserName && r.SupporterName == model.UserName);
-                if (rating != null)
+                model = await DbContext.RatingRecords.FirstOrDefaultAsync(r =>
+                    r.UserName == user.UserName && r.SupporterName == supUser.UserName);
+                if (model == null)
                 {
-                    ViewData["Comment"] = rating.RatingMsg;
-                    ViewData["Rating"] = rating.Rating;
+                    model = new RatingRecord
+                    {
+                        UserName = user.UserName,
+                        SupporterName = supUser.UserName,
+                        Rating = 0,
+                        RatingMsg = "",
+                        Time = System.DateTime.Now,
+                        SupporterInfo = supUser
+                    };
+                }
+                else
+                {
+                    model.SupporterInfo = supUser;
                 }
             }
+            ViewData["RatingValid"] = "";
             return View(model);
         }
 
@@ -81,7 +93,67 @@ namespace DbBasicApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Comment(string userName, int rating, string comment)
         {
-            return View();
+            var user = await Service.GetCurrentUserAsync();
+            if (user.UserName == userName)
+            {
+                return new BadRequestResult();
+            }
+
+            RatingRecord model = null;
+            var supUser = await DbContext.LoginInfos.Include(l => l.UserInfo)
+                .FirstOrDefaultAsync(l => l.UserName == userName);
+            if (supUser != null)
+            {
+                if (rating > 5 || rating < 1)
+                {
+                    ViewData["RatingValid"] = "评分不可为空！";
+                    return View(new RatingRecord
+                    {
+                        UserName = user.UserName,
+                        SupporterName = supUser.UserName,
+                        Rating = 0,
+                        RatingMsg = comment,
+                        Time = System.DateTime.Now,
+                        SupporterInfo = supUser
+                    });
+                }
+
+                ViewData["RatingValid"] = "";
+                model = await DbContext.RatingRecords.FirstOrDefaultAsync(r =>
+                    r.UserName == user.UserName && r.SupporterName == supUser.UserName);
+                if (model == null)
+                {
+                    model = new RatingRecord
+                    {
+                        UserName = user.UserName,
+                        SupporterName = supUser.UserName,
+                        Rating = rating,
+                        RatingMsg = comment,
+                        Time = System.DateTime.Now
+                    };
+                    DbContext.RatingRecords.Add(model);
+                }
+                else
+                {
+                    model.Rating = rating;
+                    model.RatingMsg = comment;
+                    model.Time = System.DateTime.Now;
+                    DbContext.RatingRecords.Update(model);
+                }
+                model.SupporterInfo = supUser;
+                try
+                {
+                    await DbContext.SaveChangesAsync();
+                    ViewData["IsSucceed"] = true;
+                    ViewData["Msg"] = "提示：您的评论已成功提交~";
+                }
+                catch
+                {
+                    ViewData["IsSucceed"] = false;
+                    ViewData["Msg"] = "在提交您的评论时出现了错误！";
+                }
+            }
+            return View(model);
         }
 
         [CustomAuth]

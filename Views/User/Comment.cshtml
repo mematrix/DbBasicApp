@@ -1,17 +1,17 @@
-@model LoginInfo
+@model RatingRecord
 
 @{
-    ViewData["Title"] = Model == null ? "出错了" : $"评论 { Model.UserName }";
+    ViewData["Title"] = Model == null ? "出错了" : $"评论 { Model.SupporterName }";
 }
 
-@if (Model == null)
+@if (Model == null || Model.SupporterInfo == null)
 {
     <div class="alert alert-danger" role="alert">
         <strong>出错了！</strong>
         很抱歉，您访问的资源可能不存在。
     </div>
 }
-else if (Model.Level == 0)
+else if (Model.SupporterInfo.Level == 0)
 {
     <div class="alert alert-warning" role="alert">
         <strong>提示：</strong>
@@ -20,9 +20,16 @@ else if (Model.Level == 0)
 }
 else
 {
-    ViewData["Level"] = Model.Level == 1 ? "客服" : "工作人员";
-    ViewData["Sex"] = Model.UserInfo.Sex.HasValue ? (Model.UserInfo.Sex.Value ? "男" : "女") : "未设置";
+    var user = Model.SupporterInfo;
+    ViewData["Level"] = user.Level == 1 ? "客服" : "工作人员";
+    ViewData["Sex"] = user.UserInfo.Sex.HasValue ? (user.UserInfo.Sex.Value ? "男" : "女") : "未设置";
     
+    @if (ViewData.ContainsKey("IsSucceed"))
+    {
+        var cls = (bool)ViewData["IsSucceed"] ? "alert-success" : "alert-danger";
+        
+        <div class="alert @cls">@(ViewData["Msg"])</div>
+    }
     <div class="page-header">
         <h1>@(ViewData["Title"])</h1>
     </div>
@@ -36,27 +43,27 @@ else
             </thead>
             <tbody>
                 <tr>
-                    <td>@Model.UserName</td>
+                    <td>@(Model.SupporterName)</td>
                     <td>@(ViewData["Level"])</td>
                     <td>@(ViewData["Sex"])</td>
-                    <td>@(Model.UserInfo.RegisterTime.ToString("yyyy-MM-dd HH:mm"))</td>
+                    <td>@(user.UserInfo.RegisterTime.ToString("yyyy-MM-dd HH:mm"))</td>
                 </tr>
             </tbody>
         </table>
     </p>
     <form asp-action="Comment" asp-controller="User" method="post" asp-anti-forgery="true" id="comment-form" class="form-horizontal" role="form">
-        <input type="hidden" name="username" id="username" value="@(Model.UserName)" />
+        <input type="hidden" name="username" id="username" value="@(user.UserName)" />
         <h4>请选择一个评分</h4>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-8">
-                <input name="rating" id="rating" class="rating" type="number" min="0" step="1" value="@(ViewData["Rating"])" >
-                <span class="text-danger field-validation-valid" data-valmsg-for="rating"></span>
+                <input name="rating" id="rating" class="rating" type="number" min="0" step="1" value="@(Model.Rating)" >
+                <span class="text-danger field-validation-valid" data-valmsg-for="rating">@(ViewData["RatingValid"])</span>
             </div>
         </div>
         <h4>写下您的评价</h4>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-8">
-                <textarea name="comment" id="comment" style="height: 90px; max-height: 90px;">@(ViewData["Comment"])</textarea>
+                <textarea name="comment" id="comment" style="height: 90px; max-height: 90px;">@(Model.RatingMsg)</textarea>
             </div>
         </div>
         <div class="form-group">
