@@ -30,7 +30,7 @@ namespace DbBasicApp.Models
         public string CardID { get; set; }
 
         [Required, Column("last_usage")]
-        [Display(Name = "最近一次统计用量")]
+        [Display(Name = "最近一次结算用量")]
         public double LastUsage { get; set; }
 
         [Required, Column("current_usage")]
