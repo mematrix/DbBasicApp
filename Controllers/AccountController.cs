@@ -139,6 +139,14 @@ namespace DbBasicApp.Controllers
         {
             return View();
         }
+        
+        public async Task<IActionResult> GetPublicInfo(string q)
+        {
+            if(string.IsNullOrWhiteSpace(q)) return new EmptyResult();
+            
+            var model = await _context.UserInfos.FirstOrDefaultAsync(l=>l.CardID == q);
+            return PartialView("~/Views/Partial/PublicInfoView.cshtml", model);
+        }
 
         [CustomAuth]
         public IActionResult ChangePassword()

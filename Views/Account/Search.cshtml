@@ -2,4 +2,45 @@
     ViewData["Title"] = "搜索";
 }
 
-<h2>@ViewData["Title"]</h2>
+<h2>@(ViewData["Title"])</h2>
+<form asp-action="GetPublicInfo" asp-controller="Account" id="search-form" class="form-horizontal" role="form">
+    <h4>使用您的身份证号码进行查找</h4>
+    <hr />
+    <div class="form-group">
+        <div class="col-md-10">
+            <input class="form-control" type="text" id="q" name="q" style="display: inline-block" />
+            <button type="submit" class="btn btn-primary">搜 索</button>
+            <img src="~/images/loading.gif" id="loader" style="display: none" />
+        </div>
+    </div>
+</form>
+<div style="margin-top: 12px;" id="searchResult"></div>
+
+@section scripts {
+    <script>
+        $("#search-form").submit(function(event) {
+            event.preventDefault();
+            if ($("#q").value == "") {
+                return;
+            }
+            
+            var form = $(this);
+            $.ajax({
+                url: form.attr("action"),
+                data: form.serialize(),
+                beforeSend: function() {
+                    $("#loader").show();
+                },
+                complete: function() {
+                    $("#loader").hide();
+                },
+                error: function() {
+                    $("#searchResult").text("搜索期间出现了一些错误，请重新尝试。");
+                },
+                success: function(data) {
+                    $("#searchResult").html(data);
+                }
+            })
+        })
+    </script>
+}

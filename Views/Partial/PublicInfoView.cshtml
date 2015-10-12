@@ -1,0 +1,20 @@
+@model UserInfo
+
+<div class="list-group">
+    <div class="list-group-item">
+        <h4 class="list-group-heading">身份证号码</h4>
+        <p class="list-group-item-text">@Model.CardID</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-heading">当前用量</h4>
+        <p class="list-group-item-text">@Model.CurrentUsage</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-heading">最近一次结算用量</h4>
+        <p class="list-group-item-text">@Model.LastUsage</p>
+    </div>
+    <div class="list-group-item">
+        <h4 class="list-group-heading">账户余额</h4>
+        <p class="list-group-item-text">@Model.Balance</p>
+    </div>
+</div>
