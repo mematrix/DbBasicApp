@@ -70,11 +70,11 @@ namespace DbBasicApp.Controllers
                     ModelState.AddModelError("UserName", "用户名已存在！");
                     return View(model);
                 }
-                    /* if (!Regex.IsMatch(model.CardID, @"^[1-9]\d{16}[\dxX]$"))
-                    {
-                        ModelState.AddModelError("CardId", "请输入正确格式的身份证号码！");
-                        return View(model);
-                    } */
+                /* if (!Regex.IsMatch(model.CardID, @"^[1-9]\d{16}[\dxX]$"))
+                {
+                    ModelState.AddModelError("CardId", "请输入正确格式的身份证号码！");
+                    return View(model);
+                } */
                 if (await _context.UserInfos.AnyAsync(u =>
                     string.Equals(u.CardID, model.CardID, StringComparison.OrdinalIgnoreCase)))
                 {
@@ -139,12 +139,13 @@ namespace DbBasicApp.Controllers
         {
             return View();
         }
-        
+
         public async Task<IActionResult> GetPublicInfo(string q)
         {
-            if(string.IsNullOrWhiteSpace(q)) return new EmptyResult();
-            
-            var model = await _context.UserInfos.FirstOrDefaultAsync(l=>l.CardID == q);
+            if (string.IsNullOrWhiteSpace(q)) return new EmptyResult();
+
+            EnsureDatabaseCreated(_context);
+            var model = await _context.UserInfos.FirstOrDefaultAsync(l => l.CardID == q);
             return PartialView("~/Views/Partial/PublicInfoView.cshtml", model);
         }
 
@@ -152,6 +153,36 @@ namespace DbBasicApp.Controllers
         public IActionResult ChangePassword()
         {
             return View();
+        }
+
+        [HttpPost]
+        [CustomAuth]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _service.GetCurrentUserAsync();
+                if (user.Password != model.CurrentPassword)
+                {
+                    ModelState.AddModelError("CurrentPassword", "您输入的密码有误！");
+                    return View(model);
+                }
+                if (model.CurrentPassword == model.NewPassword)
+                {
+                    ModelState.AddModelError(string.Empty, "新密码不可以和原有密码一样！");
+                    return View(model);
+                }
+
+                user.Password = model.NewPassword;
+                _context.LoginInfos.Update(user);
+                await _context.SaveChangesAsync();
+
+                await _service.SignOutAsync();
+                return RedirectToAction(nameof(AccountController.Login));
+            }
+
+            return View(model);
         }
 
         private static void EnsureDatabaseCreated(AppDbContext context)
