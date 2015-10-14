@@ -26,7 +26,7 @@
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">注册时间</h4>
-        <p class="list-group-item-text">@Model.RegisterTime.ToString("yyyy-MM-dd HH:mm")</p>
+        <p class="list-group-item-text">@(Model.RegisterTime.ToString("yyyy-MM-dd HH:mm"))</p>
     </div>
     <div class="list-group-item">
         <h4 class="list-group-item-heading">最近一次结算用量</h4>
@@ -44,4 +44,8 @@
         <h4 class="list-group-item-heading">套餐类型</h4>
         <p class="list-group-item-text">@(ViewData["Pkg"])</p>
     </div>
+</div>
+
+<div>
+    <a asp-action="EditInfo" asp-controller="Account" class="btn btn-default">修改信息</a>
 </div>
