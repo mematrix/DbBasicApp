@@ -1,6 +1,7 @@
 using System;
 using System.Threading.Tasks;
 using DbBasicApp.Models;
+using DbBasicApp.ViewModels;
 using Microsoft.AspNet.Http;
 using Microsoft.Data.Entity;
 
@@ -53,7 +54,7 @@ namespace DbBasicApp.Services
             return await SignInAsync(user.UserName, user.Password, isPersistent);
         }
 
-        public async Task<AccountResult> RegisterAsync(LoginInfo user)
+        public async Task<RegisterResult> RegisterAsync(LoginInfo user)
         {
             try
             {
@@ -62,12 +63,47 @@ namespace DbBasicApp.Services
                 // user.UserInfo = null;
                 _dbContext.LoginInfos.Add(user);
                 await _dbContext.SaveChangesAsync();
-                return new AccountResult { IsSucceeded = true };
+                return new RegisterResult { IsSucceeded = true, User = user };
             }
             catch (System.Exception e)
             {
-                return new AccountResult { IsSucceeded = false, ErrorMsg = e.Message };
+                return new RegisterResult { IsSucceeded = false, ErrorMsg = e.Message };
             }
+        }
+
+        public async Task<RegisterResult> RegisterAsync(RegisterViewModel model)
+        {
+            bool? sex = null;
+            if (model.Sex == 1)
+            {
+                sex = true;
+            }
+            else if (model.Sex == 2)
+            {
+                sex = false;
+            }
+
+            var userInfo = new UserInfo
+            {
+                Name = model.Name,
+                Sex = sex,
+                Birthday = model.Birthday,
+                CardID = model.CardID,
+                LastUsage = 0,
+                CurrentUsage = 0,
+                Balance = 0,
+                RegisterTime = DateTime.Now,
+                TelPackage = null
+            };
+            var user = new LoginInfo
+            {
+                UserName = model.UserName,
+                Password = model.Password,
+                Level = 0,
+                UserInfo = userInfo
+            };
+
+            return await RegisterAsync(user);
         }
 
         /// <summary>
@@ -76,6 +112,20 @@ namespace DbBasicApp.Services
         public async Task SignOutAsync()
         {
             await Task.Run(() => _httpContext.Session.Remove("signin-user"));
+        }
+
+        public async Task<AccountResult> UpdateInfoAsync(UserInfo userInfo)
+        {
+            try
+            {
+                _dbContext.UserInfos.Update(userInfo);
+                await _dbContext.SaveChangesAsync();
+                return new AccountResult { IsSucceeded = true };
+            }
+            catch (Exception e)
+            {
+                return new AccountResult { IsSucceeded = false, ErrorMsg = e.Message };
+            }
         }
 
         public async Task<LoginInfo> FindUserByNameAsync(string userName)

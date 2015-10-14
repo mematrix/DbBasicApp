@@ -1,7 +1,9 @@
-using Microsoft.AspNet.Mvc;
-using DbBasicApp.Models;
-using System.Linq;
 using System;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Mvc;
+using Microsoft.Data.Entity;
+using DbBasicApp.Models;
+using DbBasicApp.Services;
 
 namespace DbBasicApp.Controllers
 {
@@ -10,22 +12,36 @@ namespace DbBasicApp.Controllers
         [FromServices]
         public AppDbContext DbContext { get; set; }
 
+        public AccountService Service { get; set; }
+
         [HttpPost]
-        public JsonResult IsCardIDExisted(string cardId, string oldId = null)
+        public async Task<JsonResult> IsCardIDExisted(string cardId)
         {
-            if (string.IsNullOrWhiteSpace(cardId) || cardId == oldId)
-            {
-                return Json(true);
-            }
-            if (DbContext.UserInfos.Any(u => string.Equals(u.CardID, cardId, StringComparison.OrdinalIgnoreCase)))
+            if (await DbContext.UserInfos.AnyAsync(u => u.CardID.Equals(cardId, StringComparison.OrdinalIgnoreCase)))
                 return Json(false);
             return Json(true);
         }
 
         [HttpPost]
-        public JsonResult IsUserNameExisted(string userName)
+        public async Task<JsonResult> IsCardIDAvailable(string cardId)
         {
-            if (DbContext.LoginInfos.Any(l => string.Equals(l.UserName, userName, StringComparison.OrdinalIgnoreCase)))
+            var user = await Service.GetCurrentUserAsync();
+            if (user != null && user.UserInfo.CardID == cardId)
+            {
+                return Json(true);
+            }
+
+            if (await DbContext.UserInfos.AnyAsync(u => u.CardID.Equals(cardId, StringComparison.OrdinalIgnoreCase)))
+            {
+                return Json(false);
+            }
+            return Json(true);
+        }
+
+        [HttpPost]
+        public async Task<JsonResult> IsUserNameExisted(string userName)
+        {
+            if (await DbContext.LoginInfos.AnyAsync(l => l.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)))
             {
                 return Json(false);
             }
