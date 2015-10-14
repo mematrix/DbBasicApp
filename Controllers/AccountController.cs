@@ -1,12 +1,11 @@
 using System;
-using System.Diagnostics;
 using System.Threading.Tasks;
+using Microsoft.AspNet.Mvc;
+using Microsoft.Data.Entity;
 using DbBasicApp.Filters;
 using DbBasicApp.Models;
 using DbBasicApp.Services;
 using DbBasicApp.ViewModels;
-using Microsoft.AspNet.Mvc;
-using Microsoft.Data.Entity;
 
 namespace DbBasicApp.Controllers
 {
@@ -81,43 +80,11 @@ namespace DbBasicApp.Controllers
                     ModelState.AddModelError("CardId", "您输入的身份证号码已存在！");
                     return View(model);
                 }
-                Debug.WriteLine("UserName: " + model.UserName);
-                //  ModelState.AddModelError("UserName", model.UserName);
-                //  ModelState.AddModelError("Name", model.Name);
-                //  return View(model);
 
-                bool? sex = null;
-                if (model.Sex == 1)
-                {
-                    sex = true;
-                }
-                else if (model.Sex == 2)
-                {
-                    sex = false;
-                }
-                var userInfo = new UserInfo
-                {
-                    Name = model.Name,
-                    Sex = sex,
-                    Birthday = model.Birthday,
-                    CardID = model.CardID,
-                    LastUsage = 0,
-                    CurrentUsage = 0,
-                    Balance = 0,
-                    RegisterTime = DateTime.Now,
-                    TelPackage = null
-                };
-                var user = new LoginInfo
-                {
-                    UserName = model.UserName,
-                    Password = model.Password,
-                    Level = 0,
-                    UserInfo = userInfo
-                };
-                var result = await _service.RegisterAsync(user);
+                var result = await _service.RegisterAsync(model);
                 if (result.IsSucceeded)
                 {
-                    await _service.SignInAsync(user);
+                    await _service.SignInAsync(result.User);
                     return RedirectToAction(nameof(HomeController.Index), "Home");
                 }
                 ModelState.AddModelError(string.Empty, "注册失败！请检查您的注册信息是否正确。");
@@ -182,6 +149,50 @@ namespace DbBasicApp.Controllers
                 return RedirectToAction(nameof(AccountController.Login));
             }
 
+            return View(model);
+        }
+        
+        [CustomAuth]
+        public IActionResult EditInfo()
+        {
+            return View();
+        }
+        
+        [HttpPost]
+        [CustomAuth]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditInfo(EditInfoViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var userInfo = (await _service.GetCurrentUserAsync()).UserInfo;
+                if (model.CardID != userInfo.CardID)
+                {
+                    if (await _context.UserInfos.AnyAsync(u=>
+                        u.CardID.Equals(model.CardID, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        ModelState.AddModelError("CardId", "您输入的身份证号码已存在！");
+                        return View(model);
+                    }
+                }
+                
+                bool? sex = null;
+                if (model.Sex == 1)
+                {
+                    sex = true;
+                }
+                else if (model.Sex == 2)
+                {
+                    sex = false;
+                }
+                userInfo.Name = model.Name;
+                userInfo.Sex = sex;
+                userInfo.CardID = model.CardID;
+                userInfo.Birthday = model.Birthday;
+                await _service.UpdateInfoAsync(userInfo);
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
+            
             return View(model);
         }
 

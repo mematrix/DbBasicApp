@@ -1,0 +1,59 @@
+@using Microsoft.AspNet.Mvc.Rendering
+@model EditInfoViewModel
+
+@{
+    ViewData["Title"] = "编辑信息";
+    if (Model.Sex > 2 || Model.Sex < 0)
+    {
+        Model.Sex == 0;
+    }
+    var items = new List<SelectListItem>();
+    for (int i = 0; i < 3; i++)
+    {
+        items.Add(new SelectListItem{ Text = "未设置", Value = $"{ i }", Selected = i == Model.Sex});
+    }
+    ViewData["SelectItems"] = items;
+}
+
+<h2>@(ViewData["Title"])</h2>
+<form asp-action="EditInfo" asp-controller="Account" asp-anti-forgery="true" method="post" class="form-horizontal" role="post">
+    <h4>修改您的个人信息</h4>
+    <hr />
+    <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Name" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Sex" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <select asp-for="Sex" asp-items="@(ViewData["SelectItems"])"></select>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Birthday" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Birthday" class="form-control" />
+            <span asp-validation-for="Birthday" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="CardID" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="CardID" class="form-control" />
+            <span asp-validation-for="CardID" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary">更新信息</button>
+        </div>
+    </div>
+</form>
+
+@section Scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
