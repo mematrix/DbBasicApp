@@ -35,7 +35,8 @@
                 </div>
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
-                        <li><a asp-controller="Home" asp-action="Index">首页</a></li>
+                        <li><a asp-controller="Home" asp-action="Index">套餐一览</a></li>
+                        @await Html.PartialAsync("_ManagePartial")
                         <li><a asp-controller="User" asp-action="Discover">发现</a></li>
                         <li><a asp-controller="Home" asp-action="About">关于应用</a></li>
                         <li><a asp-controller="Home" asp-action="Contact">联系我们</a></li>

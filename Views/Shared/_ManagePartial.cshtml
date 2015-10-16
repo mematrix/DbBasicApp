@@ -1,0 +1,10 @@
+@using DbBasicApp.Services
+@inject AccountService Service
+
+@{
+    var user = await Service.GetCurrentUserAsync();
+    if (user != null && user.Level == 2)
+    {
+        <li><a asp-controller="Manage" asp-action="Charge">收费管理</a></li>
+    }
+}

@@ -15,7 +15,7 @@
         <form asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
             <ul class="nav navbar-nav navbar-right">
                 <li>
-                    <a asp-controller="Home" asp-action="Index" title="Info">欢迎 @user.UserName!</a>
+                    <a asp-controller="Account" asp-action="Index" title="Info">欢迎 @user.UserName!</a>
                 </li>
                 <li><a href="javascript:document.getElementById('logoutForm').submit()">退出登录</a></li>
             </ul>
