@@ -1,0 +1,62 @@
+@model LoginInfo
+
+@{
+    ViewData["Title"] = (Model?.UserName) ?? "个人信息";
+}
+
+<p style="height: 40px"></p>
+<div class="row">
+    <div class="col-md-4">
+        <div class="panel panel-success">
+            <div class="panel-heading">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#toggle-body">
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <h3 class="panel-title">个人信息</h3>
+            </div>
+            <div class="panel-body panel-body-over" id="toggle-body" data-action="@Url.Action("GetChildItem", "Account")">
+                <a class="list-group-item" data-item="LoginView">登录信息</a>
+                <a class="list-group-item" data-item="UserInfoView">个人资料</a>
+                <a class="list-group-item" data-item="ConsumView">消费总览</a>
+                <a class="list-group-item list-group-item-sub" data-item="PayView">缴费记录</a>
+                <a class="list-group-item list-group-item-sub" data-item="DeductView">扣费记录</a>
+                <a class="list-group-item" data-item="CommentView">评价记录</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <div id="child-content">
+            @await Html.PartialAsync("~/Views/Partial/" + (string)ViewData["Item"], ViewData["Model"])
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    <script>
+        $(function() {
+            $("#toggle-body > a").click(function() {
+                toggleActive($(this));
+                var url = $("#toggle-body").attr("data-action");
+                $("#child-content").load(url, "item=" + $(this).attr("data-item"));
+            });
+        });
+        
+        function toggleActive(element) {
+            $("#toggle-body > a").each(function() {
+                $(this).removeClass("activeitem");
+            });
+            element.addClass("activeitem");
+        }
+    </script>
+    
+    @{
+        var item = ViewData["Item"];
+        var elem = "\"a[data-item='" + item "']\"";
+        
+        <script>
+            $(@Html.Raw(elem)).addClass("activeitem");
+        </script>
+    }
+}

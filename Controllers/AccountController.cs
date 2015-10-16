@@ -6,24 +6,37 @@ using DbBasicApp.Filters;
 using DbBasicApp.Models;
 using DbBasicApp.Services;
 using DbBasicApp.ViewModels;
+using System.Linq;
+using DbBasicApp.Util;
 
 namespace DbBasicApp.Controllers
 {
     public class AccountController : Controller
     {
         private AccountService _service;
-        private AppDbContext _context;
-        private static bool _dbChecked;
+        private AppDbContext _dbContext;
 
         public AccountController(AccountService service, AppDbContext context)
         {
             _service = service;
-            _context = context;
+            _dbContext = context;
         }
 
-        public IActionResult Index()
+        [CustomAuth]
+        public async Task<IActionResult> Index(string id = null)
         {
-            return RedirectToAction("Login");
+            var info = await GetChildViewInfo(id);
+            ViewData["Item"] = info.Name;
+            ViewData["Model"] = info.Model;
+            var user = await _service.GetCurrentUserAsync();
+            return View(user);
+        }
+
+        [CustomAuth]
+        public async Task<IActionResult> GetChildItem(string item)
+        {
+            var info = await GetChildViewInfo(item);
+            return PartialView("~/Views/Partial/" + info.Name, info.Model);
         }
 
         public IActionResult Login(string returnUrl = null)
@@ -36,7 +49,7 @@ namespace DbBasicApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
-            EnsureDatabaseCreated(_context);
+            DbHelper.EnsureDatabaseCreated(_dbContext);
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
@@ -60,10 +73,10 @@ namespace DbBasicApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            EnsureDatabaseCreated(_context);
+            DbHelper.EnsureDatabaseCreated(_dbContext);
             if (ModelState.IsValid)
             {
-                if (await _context.LoginInfos.AnyAsync(l =>
+                if (await _dbContext.LoginInfos.AnyAsync(l =>
                     l.UserName.Equals(model.UserName, StringComparison.OrdinalIgnoreCase)))
                 {
                     ModelState.AddModelError("UserName", "用户名已存在！");
@@ -74,7 +87,7 @@ namespace DbBasicApp.Controllers
                     ModelState.AddModelError("CardId", "请输入正确格式的身份证号码！");
                     return View(model);
                 } */
-                if (await _context.UserInfos.AnyAsync(u =>
+                if (await _dbContext.UserInfos.AnyAsync(u =>
                     string.Equals(u.CardID, model.CardID, StringComparison.OrdinalIgnoreCase)))
                 {
                     ModelState.AddModelError("CardId", "您输入的身份证号码已存在！");
@@ -85,7 +98,7 @@ namespace DbBasicApp.Controllers
                 if (result.IsSucceeded)
                 {
                     await _service.SignInAsync(result.User);
-                    return RedirectToAction(nameof(HomeController.Index), "Home");
+                    return RedirectToAction(nameof(AccountController.Index));
                 }
                 ModelState.AddModelError(string.Empty, "注册失败！请检查您的注册信息是否正确。");
             }
@@ -111,8 +124,8 @@ namespace DbBasicApp.Controllers
         {
             if (string.IsNullOrWhiteSpace(q)) return new EmptyResult();
 
-            EnsureDatabaseCreated(_context);
-            var model = await _context.UserInfos.FirstOrDefaultAsync(l => l.CardID == q);
+            DbHelper.EnsureDatabaseCreated(_dbContext);
+            var model = await _dbContext.UserInfos.FirstOrDefaultAsync(l => l.CardID == q);
             return PartialView("~/Views/Partial/PublicInfoView.cshtml", model);
         }
 
@@ -142,8 +155,8 @@ namespace DbBasicApp.Controllers
                 }
 
                 user.Password = model.NewPassword;
-                _context.LoginInfos.Update(user);
-                await _context.SaveChangesAsync();
+                _dbContext.LoginInfos.Update(user);
+                await _dbContext.SaveChangesAsync();
 
                 await _service.SignOutAsync();
                 return RedirectToAction(nameof(AccountController.Login));
@@ -151,13 +164,13 @@ namespace DbBasicApp.Controllers
 
             return View(model);
         }
-        
+
         [CustomAuth]
         public IActionResult EditInfo()
         {
             return View();
         }
-        
+
         [HttpPost]
         [CustomAuth]
         [ValidateAntiForgeryToken]
@@ -168,14 +181,14 @@ namespace DbBasicApp.Controllers
                 var userInfo = (await _service.GetCurrentUserAsync()).UserInfo;
                 if (model.CardID != userInfo.CardID)
                 {
-                    if (await _context.UserInfos.AnyAsync(u=>
+                    if (await _dbContext.UserInfos.AnyAsync(u =>
                         u.CardID.Equals(model.CardID, StringComparison.OrdinalIgnoreCase)))
                     {
                         ModelState.AddModelError("CardId", "您输入的身份证号码已存在！");
                         return View(model);
                     }
                 }
-                
+
                 bool? sex = null;
                 if (model.Sex == 1)
                 {
@@ -190,19 +203,60 @@ namespace DbBasicApp.Controllers
                 userInfo.CardID = model.CardID;
                 userInfo.Birthday = model.Birthday;
                 await _service.UpdateInfoAsync(userInfo);
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(AccountController.Index), new { id = "UserInfoView" });
             }
-            
+
             return View(model);
         }
 
-        private static void EnsureDatabaseCreated(AppDbContext context)
+        #region 辅助方法和内容
+
+        private async Task<ChildViewInfo> GetChildViewInfo(string id, bool mapNullToDefault = true)
         {
-            if (!_dbChecked)
+            if (mapNullToDefault)
             {
-                _dbChecked = true;
-                context.Database.Migrate();
+                id = id ?? "LoginView";
             }
+            var user = await _service.GetCurrentUserAsync();
+            if (user == null || id == null)
+            {
+                return new ChildViewInfo { Model = null, Name = "Default.cshtml" };
+            }
+
+            object model = null;
+            string name = null;
+            switch (id.ToLower())
+            {
+                case "loginview":
+                    name = "LoginView.cshtml";
+                    model = user;
+                    break;
+                case "userinfoview":
+                    name = "UserInfoView.cshtml";
+                    model = user.UserInfo;
+                    break;
+                case "consumview":
+                    name = "ConsumView.cshtml";
+                    model = _dbContext.PaymentRecords.Where(p => p.UserName == user.UserName);
+                    break;
+                case "payview":
+                    name = "PayView.cshtml";
+                    model = _dbContext.PaymentRecords.Where(p => p.UserName == user.UserName && p.PayOut > 0);
+                    break;
+                case "deductview":
+                    name = "DeductView.cshtml";
+                    model = _dbContext.PaymentRecords.Where(p => p.UserName == user.UserName && p.PayOut < 0);
+                    break;
+                case "commentview":
+                    name = "CommentView.cshtml";
+                    model = _dbContext.RatingRecords.Where(r => r.UserName == user.UserName)
+                        .OrderByDescending(r => r.Time)
+                        .GroupBy(r => r.SupporterName)
+                        .Select(g => g.First());
+                    break;
+                default: name = "Default.cshtml"; break;
+            }
+            return new ChildViewInfo { Model = model, Name = name };
         }
 
         private IActionResult RedirectToLocal(string returnUrl)
@@ -211,7 +265,25 @@ namespace DbBasicApp.Controllers
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction(nameof(HomeController.Index), "Home");
+            return RedirectToAction(nameof(AccountController.Index), "Account");
         }
+
+        /// <summary>
+        /// 描述子视图所需信息
+        /// </summary>
+        protected class ChildViewInfo
+        {
+            /// <summary>
+            /// 获取或设置子视图数据模型
+            /// </summary>
+            public object Model { get; set; }
+
+            /// <summary>
+            /// 获取或设置子视图名称（包括扩展名但不包含完整路径）
+            /// </summary>
+            public string Name { get; set; }
+        }
+
+        #endregion
     }
 }
