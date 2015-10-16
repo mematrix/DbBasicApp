@@ -17,7 +17,7 @@
                 <h3 class="panel-title">个人信息</h3>
             </div>
             <div class="panel-body panel-body-over" id="toggle-body" data-action="@Url.Action("GetChildItem", "Home")">
-                <a class="list-group-item activeitem" data-item="LoginView">登录信息</a>
+                <a class="list-group-item" data-item="LoginView">登录信息</a>
                 <a class="list-group-item" data-item="UserInfoView">个人资料</a>
                 <a class="list-group-item" data-item="ConsumView">消费总览</a>
                 <a class="list-group-item list-group-item-sub" data-item="PayView">缴费记录</a>
@@ -28,7 +28,7 @@
     </div>
     <div class="col-md-8">
         <div id="child-content">
-            @await Html.PartialAsync("~/Views/Partial/LoginView.cshtml", Model)
+            @await Html.PartialAsync("~/Views/Partial/" + (string)ViewData["Item"], ViewData["Model"])
         </div>
     </div>
 </div>
@@ -50,4 +50,13 @@
             element.addClass("activeitem");
         }
     </script>
+    
+    @{
+        var item = ViewData["Item"];
+        var elem = "\"a[data-item='" + item "']\"";
+        
+        <script>
+            $(@Html.Raw(elem)).addClass("activeitem");
+        </script>
+    }
 }
