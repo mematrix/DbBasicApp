@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DbBasicApp.Filters;
 using DbBasicApp.Models;
 using DbBasicApp.Services;
+using DbBasicApp.Util;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 
@@ -23,6 +24,7 @@ namespace DbBasicApp.Controllers
 
         public async Task<IActionResult> Discover()
         {
+            DbHelper.EnsureDatabaseCreated(DbContext);
             var model = await DbContext.LoginInfos.Where(l => l.Level == 1 || l.Level == 2).ToListAsync();
             return View(model);
         }
@@ -45,7 +47,7 @@ namespace DbBasicApp.Controllers
             // 又或者访问的id为自己，那么将跳转到用户自己主页面。
             if (user != null && (model == null || model.UserName == user.UserName))
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(AccountController.Index), "Account");
             }
 
             ViewData["IsLogin"] = user != null;
@@ -58,7 +60,7 @@ namespace DbBasicApp.Controllers
             var user = await Service.GetCurrentUserAsync();
             if (user.UserName == id)
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(AccountController.Index), "Account");
             }
 
             RatingRecord model = null;
@@ -162,7 +164,7 @@ namespace DbBasicApp.Controllers
             var user = await Service.GetCurrentUserAsync();
             if (user.UserName == id)
             {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
+                return RedirectToAction(nameof(AccountController.Index), "Account");
             }
 
             var model = await DbContext.LoginInfos.FirstOrDefaultAsync(l => l.UserName == id);
