@@ -52,8 +52,9 @@
     </script>
     
     @{
-        var item = ViewData["Item"];
-        var elem = "\"a[data-item='" + item "']\"";
+        var item = (string)ViewData["Item"];
+        item = item.Substring(0, item.Length - 7);
+        var elem = "\"a[data-item='" + item + "']\"";
         
         <script>
             $(@Html.Raw(elem)).addClass("activeitem");
