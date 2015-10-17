@@ -1,0 +1,74 @@
+@model TelecomPackage
+
+@{
+    ViewData["Title"] = "编辑套餐信息";
+}
+
+<div class="page-header">
+    <h2>编辑套餐</h2>
+    <h4>更新套餐信息，或者删除套餐</h4>
+</div>
+<form asp-action="EditPackage" asp-controller="Manage" asp-anti-forgery="true" method="post" class="form-horizontal" role="form">
+    <div asp-validation-summary="ValidationSummary.ModelOnly" class="text-danger"></div>
+    <input type="hidden" name="id" id="id-update" value="@(Model.ID)" />
+    <div class="form-group">
+        <label asp-for="Name" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="Price" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="Price" class="form-control" />
+            <span asp-validation-for="Price" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="BaseUsage" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="BaseUsage" class="form-control" />
+            <span asp-validation-for="BaseUsage" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="OutPrice" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="OutPrice" class="form-control" />
+            <span asp-validation-for="OutPrice" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <button type="submit" class="btn btn-primary">更新信息</button>
+            <button type="button" class="btn btn-danger" style="margin-left: 10px;" data-toggle="modal" data-target="#delPanel">删除套餐</button>
+        </div>
+    </div>
+</form>
+
+<!-- 删除提示对话框 -->
+<div class="modal fade" id="delPanel" tabindex="-1" role="dialog" aria-labelledby="title" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="title">确认删除？</h4>
+            </div>
+            <div class="modal-body">
+                您确认要删除套餐 “@(Model.Name)” 吗？删除后，当前套餐的用户所使用套餐将会被重置为默认值。
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                <form asp-action="DeletePackage" asp-controller="Manage" asp-anti-forgery="true" method="post">
+                    <input type="hidden" name="id" id="id-del" value="@(Model.ID)" />
+                    <button type="submit" class="btn btn-danger">删除套餐</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section scripts {
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+}
