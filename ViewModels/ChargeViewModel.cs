@@ -7,7 +7,7 @@ namespace DbBasicApp.ViewModels
     public class ChargeViewModel
     {
         [Required(ErrorMessage = "用户名为必填项！")]
-        [Remote("CheckUserName", "Validation", HttpMethod = "Post", ErrorMessage = "该用户名不存在！")]
+        [Remote("CheckUserNameExist", "Validation", HttpMethod = "Post", ErrorMessage = "该用户名不存在！")]
         [Display(Name = "用户名")]
         public string UserName { get; set; }
 

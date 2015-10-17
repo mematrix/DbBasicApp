@@ -12,6 +12,7 @@ namespace DbBasicApp.Controllers
         [FromServices]
         public AppDbContext DbContext { get; set; }
 
+        [FromServices]
         public AccountService Service { get; set; }
 
         [HttpPost]
@@ -49,7 +50,7 @@ namespace DbBasicApp.Controllers
         }
 
         [HttpPost]
-        public async Task<JsonResult> CheckUserName(string userName)
+        public async Task<JsonResult> CheckUserNameExist(string userName)
         {
             if (await DbContext.LoginInfos.AnyAsync(l => l.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)))
             {
