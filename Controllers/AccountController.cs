@@ -166,9 +166,17 @@ namespace DbBasicApp.Controllers
         }
 
         [CustomAuth]
-        public IActionResult EditInfo()
+        public async Task<IActionResult> EditInfo()
         {
-            return View();
+            var userInfo = (await _service.GetCurrentUserAsync()).UserInfo;
+            var model = new EditInfoViewModel
+            {
+                Name = userInfo.Name,
+                Sex = userInfo.Sex.HasValue ? (userInfo.Sex.Value ? 1 : 2) : 0,
+                Birthday = userInfo.Birthday,
+                CardID = userInfo.CardID
+            };
+            return View(model);
         }
 
         [HttpPost]

@@ -48,8 +48,10 @@ namespace DbBasicApp.Controllers
                     UserName = model.UserName,
                     CashierName = user.UserName
                 });
+                user.UserInfo.Balance += model.Inpour;
+                DbContext.UserInfos.Update(user.UserInfo);
                 await DbContext.SaveChangesAsync();
-                return View();
+                return RedirectToAction(nameof(ManageController.Charge));
             }
             
             return View(model);
