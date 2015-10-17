@@ -9,7 +9,7 @@ namespace DbBasicApp.Validations
         AllowMultiple = false)]
     public class MinNumberAttribute : ValidationAttribute
     {
-        public double MinValue { get; set; }
+        public double MinValue { get; set; } = 0;
 
         public override bool IsValid(object value)
         {
