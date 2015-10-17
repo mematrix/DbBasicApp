@@ -54,6 +54,17 @@ namespace DbBasicApp.Controllers
             return View(model);
         }
 
+        public async Task<IActionResult> GetPublicUserInfo(string id)
+        {
+            var user = await DbContext.LoginInfos.Include(l => l.UserInfo).FirstOrDefaultAsync(l => l.UserName == id);
+            var model = user?.UserInfo;
+            if (model == null)
+            {
+                return new BadRequestResult();
+            }
+            return PartialView("~/Views/Partial/PublicInfoView.cshtml", model);
+        }
+
         [CustomAuth]
         public async Task<IActionResult> Comment(string id)
         {
