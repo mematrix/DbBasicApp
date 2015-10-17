@@ -1,62 +1,58 @@
-@model LoginInfo
+@using System.Collections.Generic
+@model IList<TelecomPackage>
 
 @{
-    ViewData["Title"] = (Model?.UserName) ?? "个人信息";
+    ViewData["Title"] = "套餐信息表";
 }
 
-<p style="height: 40px"></p>
-<div class="row">
-    <div class="col-md-4">
-        <div class="panel panel-success">
-            <div class="panel-heading">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#toggle-body">
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <h3 class="panel-title">个人信息</h3>
-            </div>
-            <div class="panel-body panel-body-over" id="toggle-body" data-action="@Url.Action("GetChildItem", "Home")">
-                <a class="list-group-item" data-item="LoginView">登录信息</a>
-                <a class="list-group-item" data-item="UserInfoView">个人资料</a>
-                <a class="list-group-item" data-item="ConsumView">消费总览</a>
-                <a class="list-group-item list-group-item-sub" data-item="PayView">缴费记录</a>
-                <a class="list-group-item list-group-item-sub" data-item="DeductView">扣费记录</a>
-                <a class="list-group-item" data-item="CommentView">评价记录</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-8">
-        <div id="child-content">
-            @await Html.PartialAsync("~/Views/Partial/" + (string)ViewData["Item"], ViewData["Model"])
-        </div>
-    </div>
+<div class="page-header">
+    <h2>套餐信息表</h2>
+    <h4>查看所有可用的套餐详细信息</h4>
 </div>
-
-@section scripts {
-    <script>
-        $(function() {
-            $("#toggle-body > a").click(function() {
-                toggleActive($(this));
-                var url = $("#toggle-body").attr("data-action");
-                $("#child-content").load(url, "item=" + $(this).attr("data-item"));
-            });
-        });
-        
-        function toggleActive(element) {
-            $("#toggle-body > a").each(function() {
-                $(this).removeClass("activeitem");
-            });
-            element.addClass("activeitem");
-        }
-    </script>
-    
-    @{
-        var item = ViewData["Item"];
-        var elem = "\"a[data-item='" + item "']\"";
-        
-        <script>
-            $(@Html.Raw(elem)).addClass("activeitem");
-        </script>
+<div>
+    <table class="table table-striped">
+        <thead>
+            <th>#</th>
+            <th>套餐名称</th>
+            <th>定价</th>
+            <th>套餐内可用量</th>
+            <th>超出套餐外单价</th>
+            @if ((bool)ViewData["IsCashier"])
+            {
+                <th>操作</th>
+            }
+        </thead>
+        <tbody>
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                var pkg = Model[i];
+                
+                <tr>
+                    <td>@(i + 1)</td>
+                    <td>@(pkg.Name)</td>
+                    <td>@(pkg.Price.ToString("C"))</td>
+                    <td>@(pkg.BaseUsage) 度(千瓦时 KW·h)</td>
+                    <td>@(pkg.OutPrice.ToString("C"))</td>
+                    @if ((bool)ViewData["IsCashier"])
+                    {
+                        <td><a asp-controller="Manage" asp-action="EditPackage" asp-route-id="@(pkg.ID)">编辑</a></td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info">
+            <strong>提示：</strong>
+            没有找到可用套餐信息。
+        </div>
     }
-}
+    
+    @if ((bool)ViewData["IsCashier"])
+    {
+        <div style="text-align: center; margin-top: 20px;">
+            <a asp-controller="Manage" asp-action="AddPackage" class="btn btn-primary">添加新套餐</a>
+        </div>
+    }
+</div>

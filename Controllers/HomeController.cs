@@ -17,8 +17,11 @@ namespace DbBasicApp.Controllers
 
         public async Task<IActionResult> Index()
         {
+            DbHelper.EnsureDatabaseCreated(DbContext);
+            var model = await DbContext.TelePackages.ToListAsync();
             var user = await Service.GetCurrentUserAsync();
-            return View(user);
+            ViewData["IsCashier"] = user != null && user.Level == 2;
+            return View(model);
         }
 
         public IActionResult About()
