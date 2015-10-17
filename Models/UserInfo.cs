@@ -11,8 +11,6 @@ namespace DbBasicApp.Models
         public int ID { get; set; }
 
         [Required, Column("name")]
-        //[RegularExpression(@"^([\u4e00-\u9fa5]{2,18})|((?!\s)[A-Za-z ]{0,30}[A-Za-z])$",
-        //    ErrorMessage = "请输入正确的名称！")]
         [Display(Name = "姓名")]
         public string Name { get; set; }
 
@@ -25,7 +23,6 @@ namespace DbBasicApp.Models
         public System.DateTime? Birthday { get; set; }
 
         [Required, Column("card_id")]
-        //[Remote("IsCardIDAvailable", "Validation")]
         [Display(Name = "身份证号码")]
         public string CardID { get; set; }
 
@@ -53,11 +50,5 @@ namespace DbBasicApp.Models
         // 外键使用Fluent API配置
         // [ForeignKey("PackageID")]
         public virtual TelecomPackage TelPackage { get; set; }
-
-        // public virtual UserLoginInfo UserLoginInfo { get; set; }
-
-        // public virtual CashierLoginInfo CashierLoginInfo { get; set; }
-
-        // public virtual SupporterLoginInfo SupporterLoginInfo { get; set; }
     }
 }

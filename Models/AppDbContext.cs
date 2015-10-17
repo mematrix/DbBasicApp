@@ -22,18 +22,6 @@ namespace DbBasicApp.Models
         /// </summary>
         public DbSet<LoginInfo> LoginInfos { get; set; }
 
-        /*
-        /// <summary>
-        /// 收款员登录信息
-        /// </summary>
-        public DbSet<CashierLoginInfo> CashierLoginInfos { get; set; }
-
-        /// <summary>
-        /// 客服人员登录信息
-        /// </summary>
-        public DbSet<SupporterLoginInfo> SupporterLoginInfo { get; set; }
-        */
-
         /// <summary>
         /// 缴费收费纪录表
         /// </summary>
@@ -69,14 +57,6 @@ namespace DbBasicApp.Models
                 .InverseReference()
                 .ForeignKey((LoginInfo l) => l.UserId)
                 .Required(true);
-            /* modelBuilder.Entity<CashierLoginInfo>().Reference(u => u.UserInfo)
-                .InverseReference()
-                .ForeignKey((CashierLoginInfo u) => u.UserId)
-                .Required(true);
-            modelBuilder.Entity<SupporterLoginInfo>().Reference(u => u.UserInfo)
-                .InverseReference()
-                .ForeignKey((SupporterLoginInfo u) => u.UserId)
-                .Required(true); */
 
             modelBuilder.Entity<PaymentRecord>().Reference(p => p.UserLoginInfo)
                 .InverseCollection()
