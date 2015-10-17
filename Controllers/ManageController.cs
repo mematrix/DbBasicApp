@@ -1,6 +1,6 @@
-using System.Threading.Tasks;
-using DbBasicApp.Services;
 using Microsoft.AspNet.Mvc;
+using DbBasicApp.Filters;
+using DbBasicApp.Services;
 
 namespace DbBasicApp.Controllers
 {
@@ -9,13 +9,9 @@ namespace DbBasicApp.Controllers
         [FromServices]
         public AccountService Service { get; set; }
 
-        public async Task<IActionResult> Charge()
+        [Authentic]
+        public IActionResult Charge()
         {
-            var user = await Service.GetCurrentUserAsync();
-            if (user == null || user.Level != 2)
-            {
-                return View("~/Views/Shared/Forbidden.cshtml");
-            }
             return View();
         }
     }

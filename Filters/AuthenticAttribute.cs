@@ -1,8 +1,7 @@
 using System;
-using DbBasicApp.Services;
-using Microsoft.AspNet.Http;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.DependencyInjection;
+using DbBasicApp.Services;
 
 namespace DbBasicApp.Filters
 {
@@ -20,7 +19,15 @@ namespace DbBasicApp.Filters
                 var user = service.GetCurrentUserAsync().Result;
                 if (user == null || user.Level < Level)
                 {
-                    //context.Result= context.Controller
+                    var controller = context.Controller as Controller;
+                    if (controller == null)
+                    {
+                        context.Result = new HttpStatusCodeResult(403);
+                    }
+                    else
+                    {
+                        context.Result = controller.View("~/Views/Shared/Forbidden.cshtml");
+                    }
                 }
             }
         }
