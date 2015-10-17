@@ -47,5 +47,15 @@ namespace DbBasicApp.Controllers
             }
             return Json(true);
         }
+
+        [HttpPost]
+        public async Task<JsonResult> CheckUserName(string userName)
+        {
+            if (await DbContext.LoginInfos.AnyAsync(l => l.UserName.Equals(userName, StringComparison.OrdinalIgnoreCase)))
+            {
+                return Json(true);
+            }
+            return Json(false);
+        }
     }
 }
