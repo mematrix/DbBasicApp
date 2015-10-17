@@ -12,3 +12,12 @@
             asp-fallback-test="window.jquery && window.jquery.validator && window.jquery.validator.unobtrusive">
     </script>
 </environment>
+
+<script>
+    $.validator.unobtrusive.adapters.addSingleVal("minnumber", "minvalue");
+    
+    $.validator.addMethod("minnumber", function(value, element, minvalue) {
+        var num = Number(value);
+        return num != NaN && num >= minvalue;
+    })
+</script>
