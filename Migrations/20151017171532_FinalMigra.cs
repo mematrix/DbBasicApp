@@ -4,7 +4,7 @@ using Microsoft.Data.Entity.Migrations;
 
 namespace DbBasicApp.Migrations
 {
-    public partial class TestChMigra : Migration
+    public partial class FinalMigra : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -14,10 +14,10 @@ namespace DbBasicApp.Migrations
                 {
                     id = table.Column<int>(isNullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    base_usage = table.Column<int>(isNullable: false),
+                    base_usage = table.Column<double>(isNullable: false),
                     name = table.Column<string>(isNullable: false),
-                    out_price = table.Column<int>(isNullable: false),
-                    price = table.Column<int>(isNullable: false)
+                    out_price = table.Column<double>(isNullable: false),
+                    price = table.Column<double>(isNullable: false)
                 },
                 constraints: table =>
                 {

@@ -122,7 +122,7 @@ namespace DbBasicApp.Migrations
                         .ValueGeneratedOnAdd()
                         .Annotation("Relational:ColumnName", "id");
 
-                    b.Property<int>("BaseUsage")
+                    b.Property<double>("BaseUsage")
                         .Annotation("Relational:ColumnName", "base_usage");
 
                     b.Property<string>("Name")
@@ -130,10 +130,10 @@ namespace DbBasicApp.Migrations
                         .Annotation("MaxLength", 50)
                         .Annotation("Relational:ColumnName", "name");
 
-                    b.Property<int>("OutPrice")
+                    b.Property<double>("OutPrice")
                         .Annotation("Relational:ColumnName", "out_price");
 
-                    b.Property<int>("Price")
+                    b.Property<double>("Price")
                         .Annotation("Relational:ColumnName", "price");
 
                     b.Key("ID");
