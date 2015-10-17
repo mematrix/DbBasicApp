@@ -45,7 +45,7 @@ else
                     </a>
                     @if (Model.Level == 1 || Model.Level == 2)
                     {
-                        <a href="@Url.Action("Comment", "User", new { id = Model.UserName })">
+                        <a href="@Url.Action("Comment", "User", new { id = Model.UserName })" style="margin-left: 10px;">
                             <button type="button" class="btn btn-info">评价TA</button>
                         </a>
                     }

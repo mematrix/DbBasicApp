@@ -28,7 +28,7 @@ else
     {
         var cls = (bool)ViewData["IsSucceed"] ? "alert-success" : "alert-danger";
         
-        <div class="alert @cls">@(ViewData["Msg"])</div>
+        <div class="alert @cls" style="margin-top: 30px;">@(ViewData["Msg"])</div>
     }
     <div class="page-header">
         <h1>@(ViewData["Title"])</h1>
@@ -84,7 +84,7 @@ else
     
     <script>
         $("#comment-form").submit(function(event) {
-            if ($("rating").value == 0) {
+            if ($("#rating").value == 0) {
                 event.preventDefault();
                 $("span[data-valmsg-for='rating']").text("评分不可为空！").show();
             }

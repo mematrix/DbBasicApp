@@ -62,9 +62,9 @@
                 }
                 
                 $.ajax({
-                    url: "/User/GetPublicUserInfo/" + $("UserName").value(),
+                    url: "/User/GetPublicUserInfo/" + $("#UserName").val(),
                     beforeSend: function() {
-                        $("#title").text("确认信息 - " + $("#UserName").value())
+                        $("#title").text("确认信息 - " + $("#UserName").val())
                         $("#content").text("正在加载...");
                         $("#submit").attr("disabled", "disabled");
                     },
@@ -73,7 +73,7 @@
                     },
                     success: function(data) {
                         $("#submit").removeAttr("disabled");
-                        $("content").html(data);
+                        $("#content").html(data);
                     }
                 });
                 $("#infoPanel").modal("show");

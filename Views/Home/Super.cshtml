@@ -44,7 +44,8 @@
 </div>
 
 <!-- 模态窗口 -->
-<div class="modal fade" id="setLevelModal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modalTitle" data-keyboard="false">
+<div class="modal fade" id="setLevelModal" tabindex="-1" role="dialog" aria-hidden="true" aria-labelledby="modalTitle"
+    data-keyboard="false" data-backdrop="static">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -54,7 +55,8 @@
                 <div class="modal-body">
                     <div class="alert alert-danger" id="errorAlert" role="alert" style="display: none;">
                         <strong>提示：</strong>
-                        在操作期间出现了一些错误，请重试。
+                        在操作期间出现了一些错误，请重试：
+                        <span id="errorMsg"></span>
                     </div>
                     <input type="hidden" name="userName" id="userName" >
                     <h4 id="showName"></h4>
@@ -69,7 +71,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="model">关 闭</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关 闭</button>
                     <button type="submit" class="btn btn-primary">提交更改</button>
                 </div>
             </form>
@@ -82,15 +84,15 @@
         $("a[data-name]").click(function() {
             var name = $(this).attr("data-name");
             var level = $(this).attr("data-level");
-            $("#userName").value = name;
+            $("#userName").val(name);
             $("#showName").text("用户名：" + name);
             $("#radioDiv > input").removeAttr("checked");
             if (level == 1) {
-                $("#SuppLevel").attr("checked", "checked");
+                $("#SuppLevel").prop("checked",true);
             } else if (level == 2) {
-                $("#CashierLevel").attr("checked", "checked");
+                $("#CashierLevel").prop("checked",true);
             } else {
-                $("#UserLevel").attr("checked", "checked");
+                $("#UserLevel").prop("checked",true);
             }
             
             $("#setLevelModal").modal("show");
@@ -112,17 +114,19 @@
                     $(".modal-footer > button").removeAttr("disabled");
                 },
                 error: function() {
+                    $("#errorMsg").text("网络错误。");
                     $("#errorAlert").show();
                 },
                 success: function(data) {
                     if (!data.status) {
+                        $("#errorMsg").text(data.msg);
                         $("#errorAlert").show();
                         return;
                     }
                     
-                    var name = $("#userName").value;
-                    $("a[data-name='" + name + "']").arrt("data-level", data.nLevel);
-                    var le = data.nLevel == 1 ? "客服" : (data.nLevel == 2 ? "工作人员" : "普通用户");
+                    var name = $("#userName").val();
+                    $("a[data-name='" + name + "']").attr("data-level", data.nlevel);
+                    var le = data.nlevel == 1 ? "客服" : (data.nlevel == 2 ? "工作人员" : "普通用户");
                     $("span[data-name='" + name + "']").text(le);
                     $("#setLevelModal").modal("hide");
                 }

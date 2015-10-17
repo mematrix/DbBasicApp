@@ -21,7 +21,7 @@
                         <td>@i</td>
                         <td>@pr.Time.ToString("yyyy-MM-dd HH:mm:ss")</td>
                         <td>@pr.PayOut</td>
-                        if (string.IsNullOrEmpty(pr.CashierName))
+                        @if (string.IsNullOrEmpty(pr.CashierName))
                         {
                             <td></td>
                         }
