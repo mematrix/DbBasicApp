@@ -51,23 +51,25 @@ else
             </tbody>
         </table>
     </p>
-    <form asp-action="Comment" asp-controller="User" method="post" asp-anti-forgery="true" id="comment-form" class="form-horizontal" role="form">
+    <form asp-action="Comment" asp-controller="User" method="post" asp-anti-forgery="true"
+        id="comment-form" class="form-horizontal" role="form">
         <input type="hidden" name="username" id="username" value="@(user.UserName)" />
         <h4>请选择一个评分</h4>
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-8">
-                <input name="rating" id="rating" class="rating" type="number" min="0" step="1" value="@(Model.Rating)" >
+            <div class="col-md-8">
+                <input name="rating" id="rating" class="rating" type="number" data-glyphicon="false"
+                    data-show-clear="false" min="0" step="1" value="@(Model.Rating)" >
                 <span class="text-danger field-validation-valid" data-valmsg-for="rating">@(ViewData["RatingValid"])</span>
             </div>
         </div>
         <h4>写下您的评价</h4>
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-8">
-                <textarea name="comment" id="comment" style="height: 90px; max-height: 90px;">@(Model.RatingMsg)</textarea>
+            <div class="col-md-8">
+                <textarea name="comment" id="comment" class="form-control comment">@(Model.RatingMsg)</textarea>
             </div>
         </div>
         <div class="form-group">
-            <div class="col-md-offset-2 col-md-8">
+            <div class="col-md-8">
                 <button type="submit" class="btn btn-info">提 交</button>
             </div>
         </div>

@@ -14,10 +14,17 @@ else
         @foreach (var rr in Model)
         {
             <a href="@Url.Action("Comment", "User", new { id = rr.SupporterName })" class="list-group-item">
-                <h4 class="list-group-item-heading">@rr.SupporterName</h4>
-                <p class="list-group-item-text" style="color: rgb(154, 207, 234);">@(rr.Time.ToString("yyyy-MM-dd HH:mm:ss"))</p>
-                <div style="margin: 6px 0px;">
-                    <input type="number" class="rating" data-readonly="true" value="@rr.Rating" >
+                <div class="row">
+                    <div class="col-md-8">
+                        <h4 class="list-group-item-heading">@rr.SupporterName</h4>
+                        <p class="list-group-item-text" style="color: rgb(154, 207, 234);">
+                            @(rr.Time.ToString("yyyy-MM-dd HH:mm:ss"))
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <input type="number" class="rating" data-readonly="true" data-glyphicon="false" data-size="xs"
+                            data-show-clear="false" data-show-caption="false" value="@rr.Rating" >
+                    </div>
                 </div>
                 <p class="list-group-item-text">@rr.RatingMsg</p>
             </a>
