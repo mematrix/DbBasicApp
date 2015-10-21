@@ -27,7 +27,7 @@ namespace DbBasicApp.Controllers
         public async Task<JsonResult> IsCardIDAvailable(string cardId)
         {
             var user = await Service.GetCurrentUserAsync();
-            if (user != null && user.UserInfo.CardID == cardId)
+            if (user == null || (user != null && user.UserInfo.CardID == cardId))
             {
                 return Json(true);
             }
