@@ -8,6 +8,8 @@ using DbBasicApp.Services;
 using DbBasicApp.ViewModels;
 using System.Linq;
 using DbBasicApp.Util;
+using System.Collections.Generic;
+using Microsoft.AspNet.Mvc.Rendering;
 
 namespace DbBasicApp.Controllers
 {
@@ -217,6 +219,56 @@ namespace DbBasicApp.Controllers
             return View(model);
         }
 
+        [CustomAuth]
+        public async Task<IActionResult> ChangeTelPackage()
+        {
+            var user = await _service.GetCurrentUserAsync();
+            var pkgs = await _dbContext.TelePackages.ToListAsync();
+
+            var sel = user.UserInfo.PackageID ?? 0;
+            var list = new List<SelectListItem>();
+            list.Add(new SelectListItem { Text = "默认套餐", Value = "0", Selected = sel == 0 });
+            list.AddRange(pkgs.Select(p => new SelectListItem
+            {
+                Text = p.Name,
+                Value = $"{ p.ID }",
+                Selected = sel == p.ID
+            }));
+
+            var model = new ChangeTelPackageViewModel
+            {
+                PkgID = sel,
+                ListItems = list,
+                Packages = pkgs
+            };
+            return View(model);
+        }
+
+        [HttpPost]
+        [CustomAuth]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangeTelPackage([Bind("PkgID")]ChangeTelPackageViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return new BadRequestResult();
+            }
+            var user = await _service.GetCurrentUserAsync();
+            var id = model.PkgID;
+            if (id != 0 && !_dbContext.TelePackages.Any(t => t.ID == id))
+            {
+                return new BadRequestResult();
+            }
+
+            int? pkgID = null;
+            if (id != 0) pkgID = id;
+            user.UserInfo.PackageID = pkgID;
+            _dbContext.UserInfos.Update(user.UserInfo);
+            await _dbContext.SaveChangesAsync();
+
+            return RedirectToAction(nameof(AccountController.Index), new { id = "UserInfoView" });
+        }
+
         #region 辅助方法和内容
 
         private async Task<ChildViewInfo> GetChildViewInfo(string id, bool mapNullToDefault = true)
@@ -241,6 +293,8 @@ namespace DbBasicApp.Controllers
                     break;
                 case "userinfoview":
                     name = "UserInfoView.cshtml";
+                    var pkg = _dbContext.TelePackages.FirstOrDefault(t => t.ID == user.UserInfo.PackageID);
+                    user.UserInfo.TelPackage = pkg;
                     model = user.UserInfo;
                     break;
                 case "consumview":

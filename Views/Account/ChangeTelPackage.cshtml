@@ -1,0 +1,59 @@
+@model ChangeTelPackageViewModel
+
+@{
+    ViewData["Title"] = "修改套餐";
+}
+
+<h2>@(ViewData["Title"])</h2>
+<div class="row">
+    <div class="col-md-8">
+        <h4>当前可选套餐信息</h4>
+        <hr />
+        <table class="table table-striped">
+            <thead>
+                <th>#</th>
+                <th>套餐名称</th>
+                <th>定价</th>
+                <th>套餐内可用量</th>
+                <th>超粗套餐外单价</th>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>0</td>
+                    <td>默认套餐</td>
+                    <td>￥0.7</td>
+                    <td>N/A</td>
+                    <td>N/A</td>
+                </tr>
+                @for (int i = 0; i < Model.Packages.Count; i++)
+                {
+                    var pkg = Model.Packages[i];
+                    
+                    <tr>
+                        <td>@(i + 1)</td>
+                        <td>@(pkg.Name)</td>
+                        <td>@(pkg.Price.ToString("C"))</td>
+                        <td>@(pkg.BaseUsage) 度(千瓦时 KW·h)</td>
+                        <td>@(pkg.OutPrice.ToString("C"))</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-md-4">
+        <form asp-action="ChangeTelPackage" asp-controller="Account" asp-anti-forgery="true" method="post" class="form-horizontal" role="form">
+            <h4>选择一个合适的套餐</h4>
+            <hr />
+            <div class="form-group">
+                <div class="col-md-10">
+                    <select asp-for="PkgID" asp-items="@(Model.ListItems)"></select>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-10">
+                    <button type="submit" class="btn btn-primary">提交更改</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
