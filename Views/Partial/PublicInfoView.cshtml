@@ -13,15 +13,15 @@ else
         </div>
         <div class="list-group-item">
             <h4 class="list-group-heading">当前用量</h4>
-            <p class="list-group-item-text">@Model.CurrentUsage</p>
+            <p class="list-group-item-text">@(Model.CurrentUsage) 度(千瓦时 KW·h)</p>
         </div>
         <div class="list-group-item">
             <h4 class="list-group-heading">最近一次结算用量</h4>
-            <p class="list-group-item-text">@Model.LastUsage</p>
+            <p class="list-group-item-text">@(Model.LastUsage) 度(千瓦时 KW·h)</p>
         </div>
         <div class="list-group-item">
             <h4 class="list-group-heading">账户余额</h4>
-            <p class="list-group-item-text">@Model.Balance</p>
+            <p class="list-group-item-text">@(Model.Balance.ToString("C"))</p>
         </div>
     </div>
 }
