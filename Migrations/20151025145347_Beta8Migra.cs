@@ -4,7 +4,7 @@ using Microsoft.Data.Entity.Migrations;
 
 namespace DbBasicApp.Migrations
 {
-    public partial class FinalMigra : Migration
+    public partial class Beta8Migra : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,12 +12,12 @@ namespace DbBasicApp.Migrations
                 name: "telecom_pkg",
                 columns: table => new
                 {
-                    id = table.Column<int>(isNullable: false)
+                    id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    base_usage = table.Column<double>(isNullable: false),
-                    name = table.Column<string>(isNullable: false),
-                    out_price = table.Column<double>(isNullable: false),
-                    price = table.Column<double>(isNullable: false)
+                    base_usage = table.Column<double>(nullable: false),
+                    name = table.Column<string>(nullable: false),
+                    out_price = table.Column<double>(nullable: false),
+                    price = table.Column<double>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -27,22 +27,21 @@ namespace DbBasicApp.Migrations
                 name: "user_info",
                 columns: table => new
                 {
-                    id = table.Column<int>(isNullable: false)
+                    id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    balance = table.Column<double>(isNullable: false),
-                    birthday = table.Column<DateTime>(isNullable: true),
-                    card_id = table.Column<string>(isNullable: false),
-                    current_usage = table.Column<double>(isNullable: false),
-                    last_usage = table.Column<double>(isNullable: false),
-                    name = table.Column<string>(isNullable: false),
-                    pkg_id = table.Column<int>(isNullable: true),
-                    reg_time = table.Column<DateTime>(isNullable: false),
-                    sex = table.Column<bool>(isNullable: true)
+                    balance = table.Column<double>(nullable: false),
+                    birthday = table.Column<DateTime>(nullable: true),
+                    card_id = table.Column<string>(nullable: false),
+                    current_usage = table.Column<double>(nullable: false),
+                    last_usage = table.Column<double>(nullable: false),
+                    name = table.Column<string>(nullable: false),
+                    pkg_id = table.Column<int>(nullable: true),
+                    reg_time = table.Column<DateTime>(nullable: false),
+                    sex = table.Column<bool>(nullable: true)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserInfo", x => x.id);
-                    table.UniqueConstraint("AK_UserInfo_CardID", x => x.card_id);
                     table.ForeignKey(
                         name: "FK_UserInfo_TelecomPackage_PackageID",
                         column: x => x.pkg_id,
@@ -53,10 +52,10 @@ namespace DbBasicApp.Migrations
                 name: "login_info",
                 columns: table => new
                 {
-                    user_name = table.Column<string>(isNullable: false),
-                    level = table.Column<int>(isNullable: false),
-                    password = table.Column<string>(isNullable: false),
-                    user_id = table.Column<int>(isNullable: false)
+                    user_name = table.Column<string>(nullable: false),
+                    level = table.Column<int>(nullable: false),
+                    password = table.Column<string>(nullable: false),
+                    user_id = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -71,12 +70,12 @@ namespace DbBasicApp.Migrations
                 name: "msg_record",
                 columns: table => new
                 {
-                    id = table.Column<int>(isNullable: false)
+                    id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    msg = table.Column<string>(isNullable: false),
-                    recv_name = table.Column<string>(isNullable: false),
-                    sender_name = table.Column<string>(isNullable: false),
-                    time = table.Column<DateTime>(isNullable: false)
+                    msg = table.Column<string>(nullable: false),
+                    recv_name = table.Column<string>(nullable: false),
+                    sender_name = table.Column<string>(nullable: false),
+                    time = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -96,13 +95,13 @@ namespace DbBasicApp.Migrations
                 name: "payment_record",
                 columns: table => new
                 {
-                    id = table.Column<int>(isNullable: false)
+                    id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    cashier_name = table.Column<string>(isNullable: true),
-                    msg = table.Column<string>(isNullable: true),
-                    pay_out = table.Column<double>(isNullable: false),
-                    time = table.Column<DateTime>(isNullable: false),
-                    user_name = table.Column<string>(isNullable: false)
+                    cashier_name = table.Column<string>(nullable: true),
+                    msg = table.Column<string>(nullable: true),
+                    pay_out = table.Column<double>(nullable: false),
+                    time = table.Column<DateTime>(nullable: false),
+                    user_name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -122,13 +121,13 @@ namespace DbBasicApp.Migrations
                 name: "rating_record",
                 columns: table => new
                 {
-                    id = table.Column<int>(isNullable: false)
+                    id = table.Column<int>(nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
-                    rating = table.Column<int>(isNullable: false),
-                    rating_msg = table.Column<string>(isNullable: true),
-                    supporter_name = table.Column<string>(isNullable: false),
-                    time = table.Column<DateTime>(isNullable: false),
-                    user_name = table.Column<string>(isNullable: false)
+                    rating = table.Column<int>(nullable: false),
+                    rating_msg = table.Column<string>(nullable: true),
+                    supporter_name = table.Column<string>(nullable: false),
+                    time = table.Column<DateTime>(nullable: false),
+                    user_name = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -144,6 +143,11 @@ namespace DbBasicApp.Migrations
                         principalTable: "login_info",
                         principalColumn: "user_name");
                 });
+            migrationBuilder.CreateIndex(
+                name: "IX_UserInfo_CardID",
+                table: "user_info",
+                column: "card_id",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)

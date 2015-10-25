@@ -8,17 +8,13 @@ using DbBasicApp.Models;
 namespace DbBasicApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class FinalMigra
+    [Migration("20151025145347_Beta8Migra")]
+    partial class Beta8Migra
     {
-        public override string Id
-        {
-            get { return "20151017171532_FinalMigra"; }
-        }
-
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .Annotation("ProductVersion", "7.0.0-beta7-15540");
+                .Annotation("ProductVersion", "7.0.0-beta8-15964");
 
             modelBuilder.Entity("DbBasicApp.Models.LoginInfo", b =>
                 {
@@ -29,13 +25,13 @@ namespace DbBasicApp.Migrations
                         .Annotation("Relational:ColumnName", "level");
 
                     b.Property<string>("Password")
-                        .Required()
+                        .IsRequired()
                         .Annotation("Relational:ColumnName", "password");
 
                     b.Property<int>("UserId")
                         .Annotation("Relational:ColumnName", "user_id");
 
-                    b.Key("UserName");
+                    b.HasKey("UserName");
 
                     b.Annotation("Relational:TableName", "login_info");
                 });
@@ -47,21 +43,21 @@ namespace DbBasicApp.Migrations
                         .Annotation("Relational:ColumnName", "id");
 
                     b.Property<string>("Msg")
-                        .Required()
+                        .IsRequired()
                         .Annotation("Relational:ColumnName", "msg");
 
                     b.Property<string>("ReceiverName")
-                        .Required()
+                        .IsRequired()
                         .Annotation("Relational:ColumnName", "recv_name");
 
                     b.Property<string>("SenderName")
-                        .Required()
+                        .IsRequired()
                         .Annotation("Relational:ColumnName", "sender_name");
 
                     b.Property<DateTime>("Time")
                         .Annotation("Relational:ColumnName", "time");
 
-                    b.Key("ID");
+                    b.HasKey("ID");
 
                     b.Annotation("Relational:TableName", "msg_record");
                 });
@@ -85,10 +81,10 @@ namespace DbBasicApp.Migrations
                         .Annotation("Relational:ColumnName", "time");
 
                     b.Property<string>("UserName")
-                        .Required()
+                        .IsRequired()
                         .Annotation("Relational:ColumnName", "user_name");
 
-                    b.Key("ID");
+                    b.HasKey("ID");
 
                     b.Annotation("Relational:TableName", "payment_record");
                 });
@@ -106,17 +102,17 @@ namespace DbBasicApp.Migrations
                         .Annotation("Relational:ColumnName", "rating_msg");
 
                     b.Property<string>("SupporterName")
-                        .Required()
+                        .IsRequired()
                         .Annotation("Relational:ColumnName", "supporter_name");
 
                     b.Property<DateTime>("Time")
                         .Annotation("Relational:ColumnName", "time");
 
                     b.Property<string>("UserName")
-                        .Required()
+                        .IsRequired()
                         .Annotation("Relational:ColumnName", "user_name");
 
-                    b.Key("ID");
+                    b.HasKey("ID");
 
                     b.Annotation("Relational:TableName", "rating_record");
                 });
@@ -131,7 +127,7 @@ namespace DbBasicApp.Migrations
                         .Annotation("Relational:ColumnName", "base_usage");
 
                     b.Property<string>("Name")
-                        .Required()
+                        .IsRequired()
                         .Annotation("MaxLength", 50)
                         .Annotation("Relational:ColumnName", "name");
 
@@ -141,7 +137,7 @@ namespace DbBasicApp.Migrations
                     b.Property<double>("Price")
                         .Annotation("Relational:ColumnName", "price");
 
-                    b.Key("ID");
+                    b.HasKey("ID");
 
                     b.Annotation("Relational:TableName", "telecom_pkg");
                 });
@@ -159,7 +155,7 @@ namespace DbBasicApp.Migrations
                         .Annotation("Relational:ColumnName", "birthday");
 
                     b.Property<string>("CardID")
-                        .Required()
+                        .IsRequired()
                         .Annotation("Relational:ColumnName", "card_id");
 
                     b.Property<double>("CurrentUsage")
@@ -169,7 +165,7 @@ namespace DbBasicApp.Migrations
                         .Annotation("Relational:ColumnName", "last_usage");
 
                     b.Property<string>("Name")
-                        .Required()
+                        .IsRequired()
                         .Annotation("Relational:ColumnName", "name");
 
                     b.Property<int?>("PackageID")
@@ -181,57 +177,58 @@ namespace DbBasicApp.Migrations
                     b.Property<bool?>("Sex")
                         .Annotation("Relational:ColumnName", "sex");
 
-                    b.Key("ID");
+                    b.HasKey("ID");
 
-                    b.AlternateKey("CardID");
+                    b.Index("CardID")
+                        .Unique();
 
                     b.Annotation("Relational:TableName", "user_info");
                 });
 
             modelBuilder.Entity("DbBasicApp.Models.LoginInfo", b =>
                 {
-                    b.Reference("DbBasicApp.Models.UserInfo")
-                        .InverseReference()
-                        .ForeignKey("DbBasicApp.Models.LoginInfo", "UserId");
+                    b.HasOne("DbBasicApp.Models.UserInfo")
+                        .WithMany()
+                        .ForeignKey("UserId");
                 });
 
             modelBuilder.Entity("DbBasicApp.Models.MsgRecord", b =>
                 {
-                    b.Reference("DbBasicApp.Models.LoginInfo")
-                        .InverseCollection()
+                    b.HasOne("DbBasicApp.Models.LoginInfo")
+                        .WithMany()
                         .ForeignKey("ReceiverName");
 
-                    b.Reference("DbBasicApp.Models.LoginInfo")
-                        .InverseCollection()
+                    b.HasOne("DbBasicApp.Models.LoginInfo")
+                        .WithMany()
                         .ForeignKey("SenderName");
                 });
 
             modelBuilder.Entity("DbBasicApp.Models.PaymentRecord", b =>
                 {
-                    b.Reference("DbBasicApp.Models.LoginInfo")
-                        .InverseCollection()
+                    b.HasOne("DbBasicApp.Models.LoginInfo")
+                        .WithMany()
                         .ForeignKey("CashierName");
 
-                    b.Reference("DbBasicApp.Models.LoginInfo")
-                        .InverseCollection()
+                    b.HasOne("DbBasicApp.Models.LoginInfo")
+                        .WithMany()
                         .ForeignKey("UserName");
                 });
 
             modelBuilder.Entity("DbBasicApp.Models.RatingRecord", b =>
                 {
-                    b.Reference("DbBasicApp.Models.LoginInfo")
-                        .InverseCollection()
+                    b.HasOne("DbBasicApp.Models.LoginInfo")
+                        .WithMany()
                         .ForeignKey("SupporterName");
 
-                    b.Reference("DbBasicApp.Models.LoginInfo")
-                        .InverseCollection()
+                    b.HasOne("DbBasicApp.Models.LoginInfo")
+                        .WithMany()
                         .ForeignKey("UserName");
                 });
 
             modelBuilder.Entity("DbBasicApp.Models.UserInfo", b =>
                 {
-                    b.Reference("DbBasicApp.Models.TelecomPackage")
-                        .InverseCollection()
+                    b.HasOne("DbBasicApp.Models.TelecomPackage")
+                        .WithMany()
                         .ForeignKey("PackageID");
                 });
         }
