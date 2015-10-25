@@ -2,6 +2,7 @@ using System;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Framework.DependencyInjection;
 using DbBasicApp.Services;
+using Microsoft.AspNet.Mvc.Filters;
 
 namespace DbBasicApp.Filters
 {
