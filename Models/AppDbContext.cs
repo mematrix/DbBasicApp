@@ -48,44 +48,44 @@ namespace DbBasicApp.Models
         {
             base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<UserInfo>().Reference(u => u.TelPackage)
-                .InverseCollection()
+            modelBuilder.Entity<UserInfo>().HasOne(u => u.TelPackage)
+                .WithMany()
                 .ForeignKey(u => u.PackageID)
                 .Required(false);
 
-            modelBuilder.Entity<LoginInfo>().Reference(l => l.UserInfo)
-                .InverseReference()
-                .ForeignKey((LoginInfo l) => l.UserId)
+            modelBuilder.Entity<LoginInfo>().HasOne(l => l.UserInfo)
+                .WithMany()
+                .ForeignKey(l => l.UserId)
                 .Required(true);
 
-            modelBuilder.Entity<PaymentRecord>().Reference(p => p.UserLoginInfo)
-                .InverseCollection()
+            modelBuilder.Entity<PaymentRecord>().HasOne(p => p.UserLoginInfo)
+                .WithMany()
                 .ForeignKey(p => p.UserName)
                 .Required(true);
-            modelBuilder.Entity<PaymentRecord>().Reference(p => p.CashierInfo)
-                .InverseCollection()
+            modelBuilder.Entity<PaymentRecord>().HasOne(p => p.CashierInfo)
+                .WithMany()
                 .ForeignKey(p => p.CashierName)
                 .Required(false);
 
-            modelBuilder.Entity<RatingRecord>().Reference(r => r.UserLoginInfo)
-                .InverseCollection()
+            modelBuilder.Entity<RatingRecord>().HasOne(r => r.UserLoginInfo)
+                .WithMany()
                 .ForeignKey(r => r.UserName)
                 .Required(true);
-            modelBuilder.Entity<RatingRecord>().Reference(r => r.SupporterInfo)
-                .InverseCollection()
+            modelBuilder.Entity<RatingRecord>().HasOne(r => r.SupporterInfo)
+                .WithMany()
                 .ForeignKey(r => r.SupporterName)
                 .Required(true);
 
-            modelBuilder.Entity<MsgRecord>().Reference(m => m.SenderLoginInfo)
-                .InverseCollection()
+            modelBuilder.Entity<MsgRecord>().HasOne(m => m.SenderLoginInfo)
+                .WithMany()
                 .ForeignKey(m => m.SenderName)
                 .Required(true);
-            modelBuilder.Entity<MsgRecord>().Reference(m => m.RecvLoginInfo)
-                .InverseCollection()
+            modelBuilder.Entity<MsgRecord>().HasOne(m => m.RecvLoginInfo)
+                .WithMany()
                 .ForeignKey(m => m.ReceiverName)
                 .Required(true);
 
-            modelBuilder.Entity<UserInfo>().AlternateKey(u => u.CardID);
+            modelBuilder.Entity<UserInfo>().Index(u => u.CardID).Unique();
         }
     }
 }
