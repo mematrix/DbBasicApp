@@ -255,7 +255,7 @@ namespace DbBasicApp.Controllers
             }
             var user = await _service.GetCurrentUserAsync();
             var id = model.PkgID;
-            if (id != 0 && !_dbContext.TelePackages.Any(t => t.ID == id))
+            if (id != 0 && !(await _dbContext.TelePackages.AnyAsync(t => t.ID == id)))
             {
                 return new BadRequestResult();
             }
@@ -293,7 +293,7 @@ namespace DbBasicApp.Controllers
                     break;
                 case "userinfoview":
                     name = "UserInfoView.cshtml";
-                    var pkg = _dbContext.TelePackages.FirstOrDefault(t => t.ID == user.UserInfo.PackageID);
+                    var pkg = await _dbContext.TelePackages.FirstOrDefaultAsync(t => t.ID == user.UserInfo.PackageID);
                     user.UserInfo.TelPackage = pkg;
                     model = user.UserInfo;
                     break;
