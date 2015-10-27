@@ -169,6 +169,22 @@ namespace DbBasicApp.Controllers
             return View(model);
         }
 
+        [Authentic]
+        public async Task<IActionResult> CommentDetail(int id)
+        {
+            var comment = await DbContext.RatingRecords.FirstOrDefaultAsync(r => r.ID == id);
+            if (comment != null)
+            {
+                var user = await Service.GetCurrentUserAsync();
+                if (user.UserName == comment.SupporterName)
+                {
+                    return View(comment);
+                }
+            }
+
+            return View();
+        }
+
         [CustomAuth]
         public async Task<IActionResult> Chat(string id)
         {

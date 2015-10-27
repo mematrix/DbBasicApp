@@ -1,0 +1,38 @@
+@model RatingRecord
+
+@{
+    ViewData["Title"] = "评论详情";
+}
+
+<div class="page-header">
+    <h1>@(ViewData["Title"])</h1>
+</div>
+
+@if (Model == null)
+{
+    <div class="alert alert-warning" role="alert">
+        <strong>提示：</strong>
+        您查看的评论不存在或者您没有权限查看此评论。
+    </div>
+}
+else
+{
+    <h4>评论者</h4>
+    <p>@(Model.UserName.Substring(0, 2) + "***")</p>
+    <h4 style="margin-top: 30px;">评分</h4>
+    <input type="number" class="rating" data-readonly="true" data-glyphicon="false"
+        data-show-clear="false" data-show-caption="false" value="@(Model.Rating)" >
+    <h4 style="margin-top: 30px;">评论时间</h4>
+    <p>@(Model.Time.ToString("yyyy-MM-dd HH:mm:ss"))</p>
+    <h4 style="margin-top: 30px;">评论内容</h4>
+    <p>@(Model.RatingMsg)</p>
+}
+
+@section scripts {
+    <environment names="Development">
+        <script src="~/lib/bootstrap-star-rating/js/star-rating.js"></script>
+    </environment>
+    <environment names="Staging,Production">
+        <script src="~/lib/bootstrap-star-rating/js/star-rating.min.js"></script>
+    </environment>
+}

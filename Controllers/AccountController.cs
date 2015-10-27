@@ -311,10 +311,13 @@ namespace DbBasicApp.Controllers
                     break;
                 case "commentview":
                     name = "CommentView.cshtml";
-                    model = _dbContext.RatingRecords.Where(r => r.UserName == user.UserName)
-                        .OrderByDescending(r => r.Time)
-                        .GroupBy(r => r.SupporterName)
-                        .Select(g => g.First());
+                    var vm = new CommentViewModel();
+                    vm.IsStaff = user.Level != 0;
+                    vm.ReceiveComments = _dbContext.RatingRecords.Where(r => r.SupporterName == user.UserName)
+                        .OrderByDescending(r => r.Time);
+                    vm.Comments = _dbContext.RatingRecords.Where(r => r.UserName == user.UserName)
+                        .OrderByDescending(r => r.Time);
+                    model = vm;
                     break;
                 default: name = "Default.cshtml"; break;
             }
