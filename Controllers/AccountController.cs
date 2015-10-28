@@ -315,6 +315,10 @@ namespace DbBasicApp.Controllers
                     vm.IsStaff = user.Level != 0;
                     vm.ReceiveComments = _dbContext.RatingRecords.Where(r => r.SupporterName == user.UserName)
                         .OrderByDescending(r => r.Time);
+                    if (vm.ReceiveComments.Count() != 0)
+                    {
+                        vm.AverageRating = vm.ReceiveComments.Average(r => r.Rating);
+                    }
                     vm.Comments = _dbContext.RatingRecords.Where(r => r.UserName == user.UserName)
                         .OrderByDescending(r => r.Time);
                     model = vm;

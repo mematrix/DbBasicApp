@@ -2,19 +2,21 @@
 
 @{
     ViewData["Title"] = (Model?.UserName) ?? "个人信息";
+    ViewData["Style"] = (Model != null && Model.UserInfo.Balance <= 0) ? "panel-danger" : "panel-success";
+    ViewData["PanelTitle"] = (Model != null && Model.UserInfo.Balance <= 0) ? "个人信息（需要缴费）" : "个人信息";
 }
 
 <p style="height: 40px"></p>
 <div class="row">
     <div class="col-md-4">
-        <div class="panel panel-success">
+        <div class="panel @(ViewData["Style"])">
             <div class="panel-heading">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#toggle-body">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <h3 class="panel-title">个人信息</h3>
+                <h3 class="panel-title">@(ViewData["PanelTitle"])</h3>
             </div>
             <div class="panel-body panel-body-over" id="toggle-body" data-action="@Url.Action("GetChildItem", "Account")">
                 <a class="list-group-item" data-item="LoginView">登录信息</a>

@@ -7,6 +7,8 @@ namespace DbBasicApp.ViewModels
     {
         public bool IsStaff { get; set; }
 
+        public double AverageRating { get; set; }
+
         public IEnumerable<RatingRecord> ReceiveComments { get; set; }
 
         public IEnumerable<RatingRecord> Comments { get; set; }
